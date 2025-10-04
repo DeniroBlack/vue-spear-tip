@@ -6,12 +6,12 @@
   "module": "./dist/vue-spear-tip.es.js",
   "scripts": {
     "build": "vite build",
-    "build:examples": "vite build --mode examples",
+    "build:docs": "vite build --mode examples",
     "dev": "vite dev"
   },
   "exports": {
     ".": {
-      "types": "./index.d.ts"
+      "types": "./dist/index.d.ts"
     }
   },
   "files": [
