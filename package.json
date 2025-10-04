@@ -7,17 +7,11 @@
   "exports": {
     ".": {
       "import": "./dist/vue-ts-class-components.es.js",
-      "require": "./dist/vue-ts-class-components.umd.cjs"
+      "require": "./dist/vue-ts-class-components.umd.cjs",
+      "types": {
+        "require": "./index.d.cts",
+        "default": "./index.d.ts"
+      }
     }
-  },
-  "files": ["dist"],
-  "peerDependencies": {
-    "vue": "^3.5.22"
-  },
-  "devDependencies": {
-    "vue": "^3.5.22"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   }
 }
