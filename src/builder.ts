@@ -1,14 +1,14 @@
 import { createApp } from 'vue' // @ts-ignore
 // import { createApp as createAppEsm } from 'vue/dist/vue.esm-bundler'
 
-import lazyVueComponents from './components/lazy'
-import Example from './components/Example.vue'
+import LazyComponents from './components/LazyComponents'
+import DocsWithExamples from './components/DocsWithExamples.vue'
 
 
-const app = createApp(Example)
+const app = createApp(DocsWithExamples)
 // // app.use(Tap)
-for(let n in lazyVueComponents) { // @ts-ignore
-  app.component(n, lazyVueComponents[n])
+for(let n in LazyComponents) { // @ts-ignore
+  app.component(n, LazyComponents[n])
 }
 
 app.mount('#app')

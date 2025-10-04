@@ -15,7 +15,7 @@ import {VueClassComponent, Prop, VueClass} from '../core'
  * @author CHORNY
  * @copyright https://smartrus.org
  */
-@VueClassComponent export default class Example extends VueClass {
+@VueClassComponent export default class DocsWithExamples extends VueClass {
   @Prop(String) readonly text: string = ''
   beforeMount() {
     console.log('test')

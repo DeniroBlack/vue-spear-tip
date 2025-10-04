@@ -5,33 +5,31 @@ import vue from '@vitejs/plugin-vue' // @ts-ignore
 import { fileURLToPath } from 'node:url' // @ts-ignore
 import { dirname, resolve } from 'node:path' // @ts-ignore
 import {flowPlugin, esbuildFlowPlugin } from '@bunchtogether/vite-plugin-flow'
+import typescript from '@rollup/plugin-typescript'
 
 const __dirname = dirname(fileURLToPath(import.meta.url)) // @ts-ignore
 
 export default defineConfig(({ command, mode }) => {
-  const isExamplesBuild = mode === 'examples'
+  const isExamplesWithDocsBuild = mode === 'examples'
   
-  const build = isExamplesBuild
+  const build = isExamplesWithDocsBuild
     ? {
       rollupOptions: {
         input: {
           main: resolve(__dirname, 'index.html'),
         },
         output: {
-          dir:`${__dirname}/dist-examples`,
+          dir:`${__dirname}/docs`,
         },
       },
     }
     : {
       lib: {
         entry: {
-          'BaseComponent': resolve(__dirname, 'src/components/BaseComponent.vue'),
-          'Example': resolve(__dirname, 'src/components/Example.vue'),
-          // Добавьте другие компоненты по необходимости
+          'index.js': resolve(__dirname, 'src/index.ts'),
         },
-        name: 'SpearTip', // Имя вашей библиотеки (для UMD/IIFE)
-        // Имя выходного файла можно задать функцией
-        fileName: (format: string, entryName: string) => `${entryName}.${format}.js`,
+        name: 'VueSpearTip',
+        fileName: (format: string, entryName: string) => `vue-spear-tip.${format}.js`,
         formats: ['es', 'cjs']
       },
       rollupOptions: {
@@ -92,6 +90,14 @@ export default defineConfig(({ command, mode }) => {
           // },
         },
       }),
+      ...(isExamplesWithDocsBuild ? [] : [
+        typescript({
+          declaration: true,
+          declarationDir: './dist',
+          rootDir: './src',
+        })
+      ])
+      
     ]
   }
 })

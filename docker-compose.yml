@@ -6,4 +6,4 @@ services:
     ports:
       - "3000:80"
     volumes:
-      - ./dist-examples:/usr/share/nginx/html
+      - ./docs:/usr/share/nginx/html

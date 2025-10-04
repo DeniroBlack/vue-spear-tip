@@ -42,7 +42,7 @@ if (typeof globalThis.__VST._vueComputed === 'undefined') {
  * Декоратор для создания компонента на основе класса VueClass
  * @param options - опции компонента или конструктор класса
  * @example
- * \@VueClassComponent({ // TODO нужно обновлять при разработке и получать при сборке, необходим написать vite плагин
+ * \@VueClassComponent({ // TODO нужно обновлять при разработке и получать при сборке, необходимо написать vite плагин
  *   makeGlobal: true, // <- сделать глобальным, если название совпадёт с системным, то будет проигнорировано
  * }) ComponentNameWebview extends Webview {
  *
@@ -287,48 +287,48 @@ function getObjProps(obj: any, ignoreVueClassBreak: boolean = false): any[] {
   )
 }
 
-/**
- * Расширение Vue объекта
- * @param vueInstance
- * @param watch
- * @param computed
- */
-function extendVueInstance(vueInstance: any, watch: any, computed: any) {
-  const p = new Proxy(vueInstance, {
-    get(target, prop, receiver) {
-
-
-      // -----------------------------------
-      // Дополнение метода `$nextTick`
-      // -----------------------------------
-      if (prop === '$nextTick') {
-        return function(fn: () => void, steps: number = 1) {
-          const recursiveNextTick = function (remainingSteps: number) {
-            vueInstance.$nextTick(() => {
-              if (remainingSteps > 1) {
-                recursiveNextTick(remainingSteps - 1)
-              }
-              else {
-                fn.call(vueInstance)
-              }
-            })
-          }.bind(vueInstance)
-
-          recursiveNextTick(steps)
-        }.bind(vueInstance)
-      }
-
-      return target[prop]
-    }
-  })
-  for (let n in watch) {
-    watch[n].handler = watch[n].handler.bind(p)
-  }
-  for (let n in computed) {
-    computed[n].get = computed[n].get.bind(p)
-  }
-  return p
-}
+// /**
+//  * Расширение Vue объекта
+//  * @param vueInstance
+//  * @param watch
+//  * @param computed
+//  */
+// function extendVueInstance(vueInstance: any, watch: any, computed: any) {
+//   const p = new Proxy(vueInstance, {
+//     get(target, prop, receiver) {
+//
+//
+//       // -----------------------------------
+//       // Дополнение метода `$nextTick`
+//       // -----------------------------------
+//       if (prop === '$nextTick') {
+//         return function(fn: () => void, steps: number = 1) {
+//           const recursiveNextTick = function (remainingSteps: number) {
+//             vueInstance.$nextTick(() => {
+//               if (remainingSteps > 1) {
+//                 recursiveNextTick(remainingSteps - 1)
+//               }
+//               else {
+//                 fn.call(vueInstance)
+//               }
+//             })
+//           }.bind(vueInstance)
+//
+//           recursiveNextTick(steps)
+//         }.bind(vueInstance)
+//       }
+//
+//       return target[prop]
+//     }
+//   })
+//   for (let n in watch) {
+//     watch[n].handler = watch[n].handler.bind(p)
+//   }
+//   for (let n in computed) {
+//     computed[n].get = computed[n].get.bind(p)
+//   }
+//   return p
+// }
 
 /**
  * Получение различий из массивов
