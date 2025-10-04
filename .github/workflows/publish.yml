@@ -20,8 +20,8 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
       - run: npm install -g bun
       - run: bun install
-      - run: bun vite build
-      - run: bun vite build:docs
+      - run: bun run build
+      - run: bun run build:docs
       - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - run: npm publish --tag next
         env:
