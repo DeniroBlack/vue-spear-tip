@@ -10,26 +10,26 @@ export default abstract class VueClass implements IVueClass {
   public readonly injectParent: Array<string> = []
   public readonly provide: {[key:string]:any} = {}
   public readonly provideParent: {[key:string]:(...args: any) => any} = {}
-
-  readonly name: string
+  
+  declare readonly name: string
   readonly instance?: this = this
   readonly $attrs: {[key:string]:any} = {}
   readonly $data: {[key:string]:any} = {}
-  readonly $el: HTMLElement // $I.Frontend.HTML.Element
-  readonly $options: {
+  declare readonly $el: HTMLElement // $I.Frontend.HTML.Element
+  declare readonly $options: {
     __scopeId: string
     __file: string
   }
-  readonly $parent: VueClass|null
-  readonly $props: Object
-  readonly $refs: {
+  declare readonly $parent: VueClass|null
+  declare readonly $props: Object
+  declare readonly $refs: {
     [key:string]: HTMLElement|HTMLInputElement|HTMLElement[]|HTMLInputElement[]
   }
   readonly $root: {
     // [key:string]:any
     readonly APP?: any
   }|this|any
-  readonly $slots: {
+  declare readonly $slots: {
     default: () => VNode[]
   } & {
     [key: string]: (() => VNode[]) | undefined

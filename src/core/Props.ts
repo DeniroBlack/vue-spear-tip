@@ -36,15 +36,15 @@ export const Prop = (
 ): any => {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     // @ts-ignore
-    if(!globalThis._vueClassInstances[target.constructor.name]) {
+    if(!globalThis.__VST._vueClassInstances[target.constructor.name]) {
       // @ts-ignore
-      globalThis._vueClassInstances[target.constructor.name] = new target.constructor
+      globalThis.__VST._vueClassInstances[target.constructor.name] = new target.constructor
       // @ts-ignore
-      globalThis._vueClassInstances[target.constructor.name].name =
+      globalThis.__VST._vueClassInstances[target.constructor.name].name =
           // @ts-ignore
-          globalThis._vueClassInstances[target.constructor.name]?.constructor?.name?.toString()
+          globalThis.__VST._vueClassInstances[target.constructor.name]?.constructor?.name?.toString()
           // @ts-ignore
-          ?? globalThis._vueClassInstances[target.constructor.name]['name']
+          ?? globalThis.__VST._vueClassInstances[target.constructor.name]['name']
           ??  ''
     }
 
@@ -52,19 +52,19 @@ export const Prop = (
       type: [propDataOrType, ...types]
     }
     // @ts-ignore
-    if(globalThis._vueClassInstances[target.constructor.name][propertyKey]) {
+    if(globalThis.__VST._vueClassInstances[target.constructor.name][propertyKey]) {
       // @ts-ignore
-      TypeObj.default = globalThis._vueClassInstances[target.constructor.name][propertyKey]
+      TypeObj.default = globalThis.__VST._vueClassInstances[target.constructor.name][propertyKey]
     }
 
     // @ts-ignore
-    if(!globalThis._vueClassProps[target.constructor.name]) {
+    if(!globalThis.__VST._vueClassProps[target.constructor.name]) {
       // @ts-ignore
-      globalThis._vueClassProps[target.constructor.name] = {}
+      globalThis.__VST._vueClassProps[target.constructor.name] = {}
     }
 
     // @ts-ignore
-    globalThis._vueClassProps[target.constructor.name][propertyKey] = TypeObj
-    // console.log(globalThis._vueClassInstances[target.constructor.name], target.constructor.name, globalThis._vueClassProps[target.constructor.name])
+    globalThis.__VST._vueClassProps[target.constructor.name][propertyKey] = TypeObj
+    // console.log(globalThis.__VST._vueClassInstances[target.constructor.name], target.constructor.name, globalThis.__VST._vueClassProps[target.constructor.name])
   }
 }

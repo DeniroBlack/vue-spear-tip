@@ -4,14 +4,39 @@
   "type": "module",
   "main": "./index.cjs",
   "module": "./index.js",
+  "scripts": {
+    "build": "vite build",
+    "build:examples": "vite build --mode examples",
+    "dev": "vite dev"
+  },
   "exports": {
     ".": {
-      "import": "./index.js",
-      "require": "./index.cjs",
       "types": {
         "require": "./index.d.cts",
         "default": "./index.d.ts"
       }
     }
-  }
+  },
+  "dependencies": {
+    "@bunchtogether/vite-plugin-flow": "^1.0.2",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "pug": "^3.*",
+    "sass-embedded": "^1.93.2",
+    "typescript": "^5.*",
+    "unocss": "^66.*",
+    "unocss-preset-scalpel": "^1.2.7",
+    "vite": "^7.*",
+    "vite-plugin-pug": "^0.4.1",
+    "vue": "^3.5.*"
+  },
+  "license": "MIT",
+  "keywords": [
+    "vue",
+    "typescript",
+    "class",
+    "component",
+    "oop",
+    "kit",
+    "frontend"
+  ]
 }

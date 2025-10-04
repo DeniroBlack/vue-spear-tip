@@ -1,0 +1,9 @@
+version: '3.9'
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "3000:80"
+    volumes:
+      - ./dist-examples:/usr/share/nginx/html

@@ -1,5 +1,6 @@
 import {defineComponent, getCurrentInstance, nextTick} from 'vue' // @ts-ignore
 import VueClass from "./VueClass.ts"
+import IGlobalComponent from '../Interfaces/IGlobalComponent'
 
 /**
  * Параметры readonly из экземпляра vue
@@ -17,24 +18,24 @@ type VueProps = {
 
 // Объявляем типы для глобального хранилища
 declare global {
-  var _vueClassInstances: Record<string, any>
-  var _vueClassProps: Record<string, Record<string, any>>
-  var _vueClassWatchers: Record<string, Record<string, any>>
-  var _vueComputed: Record<string, Record<string, any>>
+  var __VST: IGlobalComponent
 }
 
 // Инициализация глобальных объектов, если они не существуют
-if (typeof globalThis._vueClassInstances === 'undefined') {
-  globalThis._vueClassInstances = {}
+if (typeof globalThis.__VST === 'undefined') {
+  globalThis.__VST = {} as any
 }
-if (typeof globalThis._vueClassProps === 'undefined') {
-  globalThis._vueClassProps = {}
+if (typeof globalThis.__VST._vueClassInstances === 'undefined') {
+  globalThis.__VST._vueClassInstances = {}
 }
-if (typeof globalThis._vueClassWatchers === 'undefined') {
-  globalThis._vueClassWatchers = {}
+if (typeof globalThis.__VST._vueClassProps === 'undefined') {
+  globalThis.__VST._vueClassProps = {}
 }
-if (typeof globalThis._vueComputed === 'undefined') {
-  globalThis._vueComputed = {}
+if (typeof globalThis.__VST._vueClassWatchers === 'undefined') {
+  globalThis.__VST._vueClassWatchers = {}
+}
+if (typeof globalThis.__VST._vueComputed === 'undefined') {
+  globalThis.__VST._vueComputed = {}
 }
 
 /**
@@ -74,7 +75,7 @@ function createComponent<T extends { new(...args: any[]): {} }>(
   options: any = {}
 ): T & VueClass {
   // Создаем инстанс класса или получаем существующий
-  let vueClassInstance = globalThis?._vueClassInstances[constructor.name] ?? new constructor()
+  let vueClassInstance = globalThis.__VST?._vueClassInstances[constructor.name] ?? new constructor()
 
   // Проверка наследования от VueClass
   if (!(vueClassInstance instanceof VueClass)) {
@@ -82,8 +83,8 @@ function createComponent<T extends { new(...args: any[]): {} }>(
   }
 
   // Сохраняем инстанс, если его еще нет
-  if (!globalThis?._vueClassInstances[constructor.name]) {
-    globalThis._vueClassInstances[constructor.name] = vueClassInstance
+  if (!globalThis.__VST?._vueClassInstances[constructor.name]) {
+    globalThis.__VST._vueClassInstances[constructor.name] = vueClassInstance
   }
 
   // Получаем методы
@@ -95,11 +96,11 @@ function createComponent<T extends { new(...args: any[]): {} }>(
 
   // Обработка props
   const dataProps = {}
-  let props = Object.assign({}, (globalThis._vueClassProps[constructor.name] ?? {}))
+  let props = Object.assign({}, (globalThis.__VST._vueClassProps[constructor.name] ?? {}))
   let pProps = Object.getPrototypeOf(vueClassInstance)
 
   do {
-    props = Object.assign(props, (globalThis._vueClassProps[pProps.constructor.name] ?? {}))
+    props = Object.assign(props, (globalThis.__VST._vueClassProps[pProps.constructor.name] ?? {}))
   } while ((pProps = Object.getPrototypeOf(pProps)) instanceof VueClass)
 
   // Обработка свойств объекта
@@ -110,15 +111,15 @@ function createComponent<T extends { new(...args: any[]): {} }>(
   }
 
   // Обработка watchers
-  let watch = Object.assign({}, (globalThis._vueClassWatchers[constructor.name] ?? {}))
+  let watch = Object.assign({}, (globalThis.__VST._vueClassWatchers[constructor.name] ?? {}))
   let pWatch = Object.getPrototypeOf(vueClassInstance)
 
   do {
-    watch = Object.assign(watch, (globalThis._vueClassWatchers[pWatch.constructor.name] ?? {}))
+    watch = Object.assign(watch, (globalThis.__VST._vueClassWatchers[pWatch.constructor.name] ?? {}))
   } while ((pWatch = Object.getPrototypeOf(pWatch)) instanceof VueClass)
 
   // Обработка computed свойств
-  let computed = Object.assign({}, (globalThis._vueComputed[constructor.name] ?? {}))
+  let computed = Object.assign({}, (globalThis.__VST._vueComputed[constructor.name] ?? {}))
   for (let name in computed) { // @ts-ignore
     delete vueClassInstance[name]
   }

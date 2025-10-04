@@ -1,6 +1,7 @@
 <script lang="ts">
 import IBaseVueComponent from '../Interfaces/IBaseVueComponent'
-import VueClass from '../Vue/VueClass'
+import {VueClass} from '../core'
+import 'uno.css'
 
 /**
  * Базовый компонент.

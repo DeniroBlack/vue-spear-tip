@@ -6,17 +6,16 @@
  * @constructor
  */
 export const Watch = function(propertyName: string, deep: boolean = false, immediate: boolean = false): any {
-  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-    // @ts-ignore
-    if(!globalThis._vueClassInstances[target.constructor.name]) {
+  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => { // @ts-ignore
+    if (!globalThis.__VST._vueClassInstances[target.constructor.name]) {
       // @ts-ignore
-      globalThis._vueClassInstances[target.constructor.name] = new target.constructor
+      globalThis.__VST._vueClassInstances[target.constructor.name] = new target.constructor
       // @ts-ignore
-      globalThis._vueClassInstances[target.constructor.name].name =
+      globalThis.__VST._vueClassInstances[target.constructor.name].name =
         // @ts-ignore
-        globalThis._vueClassInstances[target.constructor.name]?.constructor?.name?.toString()
+        globalThis.__VST._vueClassInstances[target.constructor.name]?.constructor?.name?.toString()
         // @ts-ignore
-        ?? globalThis._vueClassInstances[target.constructor.name]['name']
+        ?? globalThis.__VST._vueClassInstances[target.constructor.name]['name']
         ??  ''
     }
     if(!target?.constructor?.prototype?.__vue_watch__) {
@@ -24,20 +23,20 @@ export const Watch = function(propertyName: string, deep: boolean = false, immed
     }
     if(!target?.constructor?.prototype?.__vue_watch__[target.constructor.name]) {
       target.constructor.prototype.__vue_watch__[target.constructor.name] = {}
-    }
-    // @ts-ignore
-    target.constructor.prototype.__vue_watch__[target.constructor.name][propertyName] = globalThis._vueClassInstances[target.constructor.name][propertyKey]
+    } // @ts-ignore
+    target.constructor.prototype.__vue_watch__[target.constructor.name][propertyName]
+      = globalThis.__VST._vueClassInstances[target.constructor.name][propertyKey]
 
     // @ts-ignore
-    if(!globalThis._vueClassWatchers[target.constructor.name]) {
+    if(!globalThis.__VST._vueClassWatchers[target.constructor.name]) {
       // @ts-ignore
-      globalThis._vueClassWatchers[target.constructor.name] = {}
+      globalThis.__VST._vueClassWatchers[target.constructor.name] = {}
     }
 
     // @ts-ignore
-    globalThis._vueClassWatchers[target.constructor.name][propertyName] = {
+    globalThis.__VST._vueClassWatchers[target.constructor.name][propertyName] = {
       // @ts-ignore
-      handler: globalThis._vueClassInstances[target.constructor.name][propertyKey],
+      handler: globalThis.__VST._vueClassInstances[target.constructor.name][propertyKey],
       deep: deep,
       immediate: immediate,
     }
