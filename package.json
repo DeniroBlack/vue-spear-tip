@@ -2,12 +2,12 @@
   "name": "vue-spear-tip",
   "version": "0.1.0",
   "type": "module",
-  "main": "./dist/vue-ts-class-components.umd.cjs",
-  "module": "./dist/vue-ts-class-components.es.js",
+  "main": "./index.cjs",
+  "module": "./index.js",
   "exports": {
     ".": {
-      "import": "./dist/vue-ts-class-components.es.js",
-      "require": "./dist/vue-ts-class-components.umd.cjs",
+      "import": "./index.js",
+      "require": "./index.cjs",
       "types": {
         "require": "./index.d.cts",
         "default": "./index.d.ts"
