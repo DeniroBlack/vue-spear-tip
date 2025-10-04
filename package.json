@@ -1,5 +1,5 @@
 {
-  "name": "@diniroblack/vue-ts-class-components",
+  "name": "vue-spear-tip",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/vue-ts-class-components.umd.cjs",
