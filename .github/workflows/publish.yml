@@ -1,7 +1,9 @@
 name: Publish Package
 on:
-  release:
-    types: [published]
+  push:
+    branches: [main]
+#  release:
+#    types: [published]
 
 permissions:
   contents: read
@@ -17,6 +19,9 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           token: ${{ secrets.NPM_TOKEN }}
       - run: npm install -g npm@latest
+      - run: npm install -g bun
+      - run: bun install
+      - run: bun vite build
       - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - run: npm publish
         env:

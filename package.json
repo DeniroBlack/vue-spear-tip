@@ -1,6 +1,6 @@
 {
   "name": "vue-spear-tip",
-  "version": "0.1.4",
+  "version": "0.1.4-test",
   "type": "module",
   "main": "./dist/vue-spear-tip.cjs.js",
   "module": "./dist/vue-spear-tip.es.js",
