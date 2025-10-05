@@ -19,13 +19,13 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           token: ${{ secrets.NPM_TOKEN }}
         # Публикация пока в ручном режиме производится
-#      - run: npm install -g bun
-#      - run: bun install
-#      - run: bun run build
-#      - run: mkdir docs
-#      - run: chmod 777 docs
-#      - run: bun run build:docs
-#      - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+      - run: npm install -g bun
+      - run: bun install
+      - run: bun run build
+      - run: mkdir docs
+      - run: chmod 777 docs
+      - run: bun run build:docs
+      - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       # Установка актуальных версий
 #      - run: npm dist-tag add vue-spear-tip@0.1.6 latest
@@ -38,7 +38,7 @@ jobs:
 #      - run: npm publish
 
        # Раскомментировать при предварительных alpha версий
-#      - run: npm publish --tag next --access=public
+      - run: npm publish --tag beta --access=public
 #      - run: npm publish --tag alpha
 
       # Раскомментировать при публикации beta версий (тут ещё с тегами разобраться надо)
