@@ -45,7 +45,7 @@ jobs:
 #      - run: npm publish --tag beta
 
       # тут запуск выгрузки документов
-      - run: apt install curl
+#      - run: apt install curl
       - run: curl https://vue-spear-tip.smartrus.org/build/${{ secrets.SMARTRUSORG_VST_TOKEN }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
