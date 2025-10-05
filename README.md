@@ -1,10 +1,10 @@
-# [<img src="https://vue-spear-tip.smartrus.org/VST_LOGO.png" height="80"/>](VST_LOGO.png) Vue Spear Tip
+# [<img src="https://vue-spear-tip.smartrus.org/VST_LOGO.png" height="50"/>](https://vue-spear-tip.smartrus.org) Vue Spear Tip
 #### Reactive OOP frontend programming library on Vue
 
 Vue 3 TypeScript Class Components with @Watch, @Computed, @Prop decorators. 
 And UI KIT on them.
 
-Built documentation with examples: [vue-spear-tip.smartrus.org](https://vue-spear-tip.smartrus.org "Open demo with docs").
+Built documentation with examples: [vue-spear-tip.smartrus.org](https://vue-spear-tip.smartrus.org "Open demo with docs")
 
 #### Install
 ```
