@@ -1,9 +1,9 @@
 name: Publish Package
 on:
-#  push:
-#    branches: [main]
-  release:
-    types: [published]
+  push:
+    branches: [main]
+#  release:
+#    types: [published]
 
 permissions:
   contents: read
@@ -18,13 +18,14 @@ jobs:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
           token: ${{ secrets.NPM_TOKEN }}
-      - run: npm install -g bun
-      - run: bun install
-      - run: bun run build
-      - run: mkdir docs
-      - run: chmod 777 docs
-      - run: bun run build:docs
-      - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+        # Публикация пока в ручном режиме производится
+#      - run: npm install -g bun
+#      - run: bun install
+#      - run: bun run build
+#      - run: mkdir docs
+#      - run: chmod 777 docs
+#      - run: bun run build:docs
+#      - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       # Установка актуальных версий
 #      - run: npm dist-tag add vue-spear-tip@0.1.6 latest
@@ -37,12 +38,13 @@ jobs:
 #      - run: npm publish
 
        # Раскомментировать при предварительных alpha версий
-      - run: npm publish --tag next --access=public
+#      - run: npm publish --tag next --access=public
 #      - run: npm publish --tag alpha
 
       # Раскомментировать при публикации beta версий (тут ещё с тегами разобраться надо)
 #      - run: npm publish --tag beta
 
+      # тут запуск выгрузки документов
       - run: apt install curl
       - run: curl https://vue-spear-tip.smartrus.org/build/${{ secrets.SMARTRUSORG_VST_TOKEN }}
         env:

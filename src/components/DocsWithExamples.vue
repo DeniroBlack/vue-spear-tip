@@ -3,9 +3,9 @@
     div(class="h30px w200px m10px")
       Button(
         class="w100%"
-      ) Example!
+      ) Example!!
     img(src="../resources/VST_LOGO.png" class="w100px")
-    span Example!
+    span Example!!
 </template>
 
 
