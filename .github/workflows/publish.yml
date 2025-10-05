@@ -30,7 +30,8 @@ jobs:
 #      - run: npm publish
 
        # Раскомментировать при предварительных alpha версий
-      - run: npm publish --tag next
+#      - run: npm publish --tag next
+      - run: npm publish --tag alpha
 
       # Раскомментировать при публикации beta версий (тут ещё с тегами разобраться надо)
 #      - run: npm publish --tag beta
