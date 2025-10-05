@@ -56,7 +56,7 @@ Need enable experimental decorators in `tsconfig.json`:
       console.log('test variable changed', newVal)
     }
     
-    declare computed: boolean; @Watch('test') _computedComputed(): boolean {
+    declare computed: boolean; @Watch('computed') _computedComputed(): boolean {
       return true
     }
   }
