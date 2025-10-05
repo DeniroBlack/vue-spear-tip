@@ -30,15 +30,15 @@ jobs:
 #      - run: npm dist-tag add vue-spear-tip@0.1.6 latest
 #      - run: npm dist-tag add vue-spear-tip@0.1.6 next
 #      - run: npm dist-tag add vue-spear-tip@0.1.7-beta.0 beta
-      - run: npm dist-tag add vue-spear-tip@0.1.7-alpha.0 alpha
-#      - run: npm dist-tag add vue-spear-tip@0.1.7-alpha.0 next
+#      - run: npm dist-tag add vue-spear-tip@0.1.7-alpha.0 alpha
+      - run: npm dist-tag add vue-spear-tip@0.1.7-alpha.1 next
 
       # Раскомментировать при публикации рабочей версии
 #      - run: npm publish
 
        # Раскомментировать при предварительных alpha версий
-#      - run: npm publish --tag next
-      - run: npm publish --tag alpha
+      - run: npm publish --tag next
+#      - run: npm publish --tag alpha
 
       # Раскомментировать при публикации beta версий (тут ещё с тегами разобраться надо)
 #      - run: npm publish --tag beta
