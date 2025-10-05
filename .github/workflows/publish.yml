@@ -2,8 +2,8 @@ name: Publish Package
 on:
 #  push:
 #    branches: [main]
-#  release:
-#    types: [published]
+  release:
+    types: [published]
 
 permissions:
   contents: read
