@@ -4,10 +4,14 @@ import UnoCSS from 'unocss/vite' // @ts-ignore
 import vue from '@vitejs/plugin-vue' // @ts-ignore
 import { fileURLToPath } from 'node:url' // @ts-ignore
 import { dirname, resolve } from 'node:path' // @ts-ignore
-import {flowPlugin, esbuildFlowPlugin } from '@bunchtogether/vite-plugin-flow'
+import {flowPlugin, esbuildFlowPlugin } from '@bunchtogether/vite-plugin-flow' // @ts-ignore
+import {copyFile} from 'fs'
 import typescript from '@rollup/plugin-typescript'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
-const __dirname = dirname(fileURLToPath(import.meta.url)) // @ts-ignore
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+copyFile(resolve(__dirname, 'index.d.ts'), resolve(__dirname, 'dist/vue-spear-tip.d.ts'), () => {}) // @ts-ignore
 
 export default defineConfig(({ command, mode }) => {
   const isExamplesWithDocsBuild = mode === 'examples'
@@ -96,8 +100,7 @@ export default defineConfig(({ command, mode }) => {
           declarationDir: './dist',
           rootDir: './src',
         })
-      ])
-      
+      ]),
     ]
   }
 })

@@ -8,7 +8,9 @@
     "outDir": "dist",
     "skipLibCheck": true,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
   },
   "include": ["vite.config.*", "src/**/*", "src/**/*.vue"]
 }

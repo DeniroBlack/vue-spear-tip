@@ -11,3 +11,4 @@ npm install vue-spear-tip
 
 Use with vite + html/pug + typescript classes + sass/scss
 
+Need enable experimental decorators
