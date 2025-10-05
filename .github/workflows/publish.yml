@@ -31,10 +31,10 @@ jobs:
 
        # Раскомментировать при предварительных alpha версий
 #      - run: npm publish --tag next
-      - run: npm publish --tag alpha
+#      - run: npm publish --tag alpha
 
       # Раскомментировать при публикации beta версий (тут ещё с тегами разобраться надо)
-#      - run: npm publish --tag beta
+      - run: npm publish --tag beta
 
       - run: apt install curl
       - run: curl https://vue-spear-tip.smartrus.org/build/${{ secrets.SMARTRUSORG_VST_TOKEN }}
