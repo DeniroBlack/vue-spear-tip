@@ -7,11 +7,11 @@ import { dirname, resolve } from 'node:path' // @ts-ignore
 import {flowPlugin, esbuildFlowPlugin } from '@bunchtogether/vite-plugin-flow' // @ts-ignore
 import {copyFile} from 'fs'
 import typescript from '@rollup/plugin-typescript'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 copyFile(resolve(__dirname, 'index.d.ts'), resolve(__dirname, 'dist/vue-spear-tip.d.ts'), () => {}) // @ts-ignore
+copyFile(resolve(__dirname, 'src/resources/VST_LOGO.png'), resolve(__dirname, 'docs/VST_LOGO.png'), () => {}) // @ts-ignore
 
 export default defineConfig(({ command, mode }) => {
   const isExamplesWithDocsBuild = mode === 'examples'
@@ -24,6 +24,9 @@ export default defineConfig(({ command, mode }) => {
         },
         output: {
           dir:`${__dirname}/docs`,
+          assetFileNames: () => 'static/[name]-[hash][extname]',
+          chunkFileNames: "static/[name]-[hash].js",
+          entryFileNames: "static/[name]-[hash].js",
         },
       },
     }
@@ -74,11 +77,6 @@ export default defineConfig(({ command, mode }) => {
     },
     // publicPath: ".",
     plugins: [
-      pugPlugin(),
-      flowPlugin(),
-      UnoCSS({
-        configFile: './uno.config.ts',
-      }),
       vue({
         template: {
           // preprocessOptions: { // <- ИИ предлагал, что бы pug не делал переносы, не помогло
@@ -93,6 +91,11 @@ export default defineConfig(({ command, mode }) => {
           //   includeAbsolute: false,
           // },
         },
+      }),
+      pugPlugin(),
+      flowPlugin(),
+      UnoCSS({
+        configFile: './uno.config.ts',
       }),
       ...(isExamplesWithDocsBuild ? [] : [
         typescript({

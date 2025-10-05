@@ -1,4 +1,4 @@
-# Vue Spear Tip
+# [<img src="https://vue-spear-tip.smartrus.org/VST_LOGO.png" height="80"/>](VST_LOGO.png) Vue Spear Tip
 #### Reactive OOP frontend programming library on Vue
 
 Vue 3 TypeScript Class Components with @Watch, @Computed, @Prop decorators. 
@@ -38,15 +38,15 @@ Need enable experimental decorators in `tsconfig.json`:
 
 
 <script lang="ts">
-  import {VueClassComponent, Prop, Watch, Computed, BaseComponent} from 'vue-spear-tip'
+  import {VST, Prop, Watch, Computed, BaseComponent} from 'vue-spear-tip'
 
 
   /**
    * Example
    * @author CHORNY
-   * @copyright https://smartrus.org
+   * @copyright https://smartrus.orgVueClassComponent
    */
-  @VueClassComponent export default class Example extends BaseComponent {
+  @VST export default class Example extends BaseComponent {
     @Prop(String, null) readonly text: string = ''
     test: string = ''
     

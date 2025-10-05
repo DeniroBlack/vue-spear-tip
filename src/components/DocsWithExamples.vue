@@ -1,7 +1,10 @@
 <template lang="pug">
   div
     div(class="h30px w200px m10px")
-      Button Example!
+      Button(
+        class="w100%"
+      ) Example!
+    img(src="../resources/VST_LOGO.png" class="w100px")
     span Example!
 </template>
 
