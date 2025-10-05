@@ -4,6 +4,8 @@
 Vue 3 TypeScript Class Components with @Watch, @Computed, @Prop decorators. 
 And UI KIT on them.
 
+Built documentation with examples: [vue-spear-tip.smartrus.org](https://vue-spear-tip.smartrus.org "Open demo with docs").
+
 #### Install
 ```
 npm install vue-spear-tip

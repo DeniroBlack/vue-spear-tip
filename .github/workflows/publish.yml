@@ -1,9 +1,9 @@
 name: Publish Package
 on:
-#  push:
-#    branches: [main]
-  release:
-    types: [published]
+  push:
+    branches: [main]
+#  release:
+#    types: [published]
 
 permissions:
   contents: read
@@ -21,10 +21,18 @@ jobs:
       - run: npm install -g bun
       - run: bun install
       - run: bun run build
+      - run: mkdir docs
+      - run: chmod 777 docs
       - run: bun run build:docs
       - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-      - run: npm publish
-#      Раскомментировать при публикации альфа-бета версий
-#      - run: npm publish --tag next
+
+      # Раскомментировать при публикации рабочей версии
+#      - run: npm publish
+
+      # Раскомментировать при публикации полноценных
+      - run: npm publish --tag next
+
+      - run: apt install curl
+      - run: curl https://vue-spear-tip.smartrus.org/build/${{ secrets.SMARTRUSORG_VST_TOKEN }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

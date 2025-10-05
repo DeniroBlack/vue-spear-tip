@@ -7,15 +7,14 @@
 
 
 <script lang="ts">
-import {VueClassComponent, Prop, VueClass} from '../core'
-
+import {VST, Prop, VueClass} from '../core'
 
 /**
  * Example
  * @author CHORNY
  * @copyright https://smartrus.org
  */
-@VueClassComponent export default class DocsWithExamples extends VueClass {
+@VST export default class DocsWithExamples extends VueClass {
   @Prop(String) readonly text: string = ''
   beforeMount() {
     console.log('test')

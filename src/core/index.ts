@@ -16,5 +16,7 @@ export * from './Props'
 export * from './Watch'
 export * from './Computed'
 import BaseComponent from '../components/BaseComponent.vue'
-export {BaseComponent}
+import {VueClassComponent} from './VueClassComponent'
+const VST = VueClassComponent
+export {BaseComponent, VST}
 
