@@ -1,7 +1,10 @@
 export * from './core'
+export * from './kit'
 
-import LazyComponents from './components/LazyComponents'
+import BaseComponent from './replaceable/BaseComponent.vue'
+import FieldComponent from './replaceable/FieldComponent.vue'
 
 export {
-  LazyComponents
+  BaseComponent,
+  FieldComponent,
 }

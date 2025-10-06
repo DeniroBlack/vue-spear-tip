@@ -1,11 +1,12 @@
 {
   "name": "vue-spear-tip",
-  "version": "0.1.7-beta.1",
+  "version": "0.1.7",
   "type": "module",
   "scripts": {
-    "build": "vite build",
-    "build:docs": "vite build --mode examples",
-    "dev": "vite dev"
+    "build": "vite build --mode examples-build",
+    "build:docs": "vite build --mode examples-docs-build",
+    "dev": "vite dev --mode examples-dev",
+    "dev:docs": "vite dev --mode examples-docs-dev"
   },
   "main": "./dist/vue-spear-tip.cjs.js",
   "module": "./dist/vue-spear-tip.es.js",
@@ -17,11 +18,13 @@
         "main": "./dist/index.d.ts",
         "module": "./dist/vue-spear-tip.d.ts"
       }
-    }
+    },
+    "./style": "./dist/vue-spear-tip.css"
   },
   "files": [
     "dist",
-    "docs"
+    "docs",
+    "vue-spear-tip.css"
   ],
   "dependencies": {
     "@bunchtogether/vite-plugin-flow": "^1.0.2",

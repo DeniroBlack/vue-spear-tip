@@ -5,18 +5,62 @@ import vue from '@vitejs/plugin-vue' // @ts-ignore
 import { fileURLToPath } from 'node:url' // @ts-ignore
 import { dirname, resolve } from 'node:path' // @ts-ignore
 import {flowPlugin, esbuildFlowPlugin } from '@bunchtogether/vite-plugin-flow' // @ts-ignore
-import {copyFile} from 'fs'
+import {mkdir, promises} from 'fs'
 import typescript from '@rollup/plugin-typescript'
 
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-copyFile(resolve(__dirname, 'index.d.ts'), resolve(__dirname, 'dist/vue-spear-tip.d.ts'), () => {}) // @ts-ignore
-copyFile(resolve(__dirname, 'src/resources/VST_LOGO.png'), resolve(__dirname, 'docs/VST_LOGO.png'), () => {}) // @ts-ignore
+await promises.copyFile(resolve(__dirname, 'index.d.ts'), resolve(__dirname, 'dist/vue-spear-tip.d.ts'))
+await promises.copyFile(resolve(__dirname, 'src/resources/VST_LOGO.png'), resolve(__dirname, 'docs/VST_LOGO.png')) // @ts-ignore
 
-export default defineConfig(({ command, mode }) => {
-  const isExamplesWithDocsBuild = mode === 'examples'
+await promises.mkdir(resolve(__dirname, 'dist'), {recursive: true})
+await promises.mkdir(resolve(__dirname, 'src/replaceable/Elements/Button'), {recursive: true})
+await promises.writeFile(
+  resolve(__dirname, 'src/replaceable/Elements/Button/ButtonInherited.ts'),
+  (await promises.readFile(
+    resolve(__dirname, 'src/components/Elements/Button/ButtonInherited.ts'))
+  ).toString().replace(
+    `'../../../core'`, `'../../../core'\nimport BaseComponent from '../../BaseComponent.vue'`
+  ).replace(
+    `extends VueClass`, `extends BaseComponent`
+  )
+)
+
+// TODO перед прод сборкой подменять наследуемые компоненты с внедрением зависимостей
+
+//@ts-ignore
+export default defineConfig(async (options) => {
   
-  const build = isExamplesWithDocsBuild
+  // examples-build
+  // examples-docs-build
+  // examples-dev
+  // examples-docs-dev
+  if (
+    options.mode === 'examples-docs-build'
+    // || options.mode === 'examples-build'
+    || options.mode === 'examples-docs-dev'
+  ) {
+    await promises.copyFile(
+      resolve(__dirname, 'src/components/BaseComponentUnoCss.vue'),
+      resolve(__dirname, 'src/replaceable/BaseComponent.vue'),
+    )
+    await promises.copyFile(
+      resolve(__dirname, 'src/components/FieldComponentUnoCss.vue'),
+      resolve(__dirname, 'src/replaceable/FieldComponent.vue'),
+    )
+  }
+  else {
+    await promises.copyFile(
+      resolve(__dirname, 'src/components/BaseComponent.vue'),
+      resolve(__dirname, 'src/replaceable/BaseComponent.vue'),
+    )
+    await promises.copyFile(
+      resolve(__dirname, 'src/components/FieldComponent.vue'),
+      resolve(__dirname, 'src/replaceable/FieldComponent.vue'),
+    )
+  }
+  
+  const build = options.mode === 'examples-docs-build'
     ? {
       rollupOptions: {
         input: {
@@ -44,6 +88,7 @@ export default defineConfig(({ command, mode }) => {
         output: {
           dir:`${__dirname}/dist`,
         },
+        cssFileName: 'vue-spear-tip'
       },
       manifest: true,
     }
@@ -77,6 +122,12 @@ export default defineConfig(({ command, mode }) => {
     },
     // publicPath: ".",
     plugins: [
+      pugPlugin(),
+      flowPlugin(),
+      UnoCSS({
+        configFile: resolve(__dirname, 'uno.config.ts'),
+        // mode: 'vue-scoped',
+      }),
       vue({
         template: {
           // preprocessOptions: { // <- ИИ предлагал, что бы pug не делал переносы, не помогло
@@ -92,18 +143,28 @@ export default defineConfig(({ command, mode }) => {
           // },
         },
       }),
-      pugPlugin(),
-      flowPlugin(),
-      UnoCSS({
-        configFile: './uno.config.ts',
-      }),
-      ...(isExamplesWithDocsBuild ? [] : [
+      ...(options.mode !== 'examples-build' ? [] : [
         typescript({
           declaration: true,
           declarationDir: './dist',
           rootDir: './src',
         })
       ]),
+      {
+        name: 'post-build-actions',
+        async closeBundle() {
+          await promises.copyFile(
+            resolve(__dirname, 'src/replaceable/FieldComponent.vue'),
+            resolve(__dirname, 'dist/replaceable/FieldComponent.vue')
+          )
+          await promises.copyFile(
+            resolve(__dirname, 'src/replaceable/BaseComponent.vue'),
+            resolve(__dirname, 'dist/replaceable/BaseComponent.vue')
+          )
+          // Example: Copy a file
+          // fs.copyFileSync('dist/index.html', 'some/other/path/index.html');
+        },
+      },
     ]
   }
 })

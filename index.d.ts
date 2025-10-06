@@ -1,3 +1,3 @@
 declare module 'vue-spear-tip' {
-  export * from './index.d.ts'
+  export * from './dist/index.d.ts'
 }

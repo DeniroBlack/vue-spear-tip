@@ -19,6 +19,13 @@ export default defineConfig({
   shortcuts: [
     // ...
   ],
+  content: {
+    // This was the problematic, overly broad pattern:
+    // filesystem: ["**/*.{html,js,ts,jsx,tsx,vue,svelte,astro}"],
+    
+    // This is a more precise, safer target (adjust for your src structure):
+    filesystem: ["./src/**/*.{html,js,ts,jsx,tsx,vue}"]
+  },
   theme: {
     colors: {
       // ...

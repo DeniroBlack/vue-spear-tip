@@ -177,7 +177,7 @@ function createComponent<T extends { new(...args: any[]): {} }>(
     created: function() { // @ts-ignore
       this.name = vueClassInstance['name'] ?? vueClassInstance['instance']?.constructor.name
       for(let method in methods) { // @ts-ignore
-        this[method] = vueClassInstance[method].bind(this)
+        this[method] = vueClassInstance?.[method].bind?.(this);
       }
       vueClassInstance.createdParent.call(this)
       vueClassInstance.created.call(this)

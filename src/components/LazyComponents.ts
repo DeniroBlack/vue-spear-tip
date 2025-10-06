@@ -1,10 +1,8 @@
 import {defineAsyncComponent} from 'vue'
 import {VueClass} from '../core'
 
-let LazyComponents: {
-  Button: VueClass
-} = {
-  Button: defineAsyncComponent(() => import('./Button')) as any,
-}
+const Button: VueClass = defineAsyncComponent(() => import('./Elements/Button')) as any
 
-export default LazyComponents
+export {
+  Button
+}

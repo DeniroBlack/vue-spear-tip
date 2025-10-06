@@ -4,11 +4,22 @@
 Vue 3 TypeScript Class Components with @Watch, @Computed, @Prop decorators. 
 And UI KIT on them.
 
+## What is the Vue Spear Tip?
+**Vue Spear Tip** - is a global wrapper library for Vue 3 components using decorators. It allows you to describe a Vue component as an object-oriented class with inheritance, as well as provides a set of pre-built fields and components assembled from various open-source libraries that we constantly update. We are always looking for ways to improve our offerings.
+
 Built documentation with examples: [vue-spear-tip.smartrus.org](https://vue-spear-tip.smartrus.org "Open demo with docs")
 
 #### Install
 ```
 npm install vue-spear-tip
+```
+or with Yarn
+```
+yarn add vue-spear-tip
+```
+or with Bun.JS
+```
+bun add vue-spear-tip
 ```
 
 [//]: # (Use with vite + html/pug + typescript classes + sass/scss)
@@ -23,6 +34,11 @@ Need enable experimental decorators in `tsconfig.json`:
     "experimentalDecorators": true
   }
 }
+```
+
+#### Add kit components styles
+```ts
+import 'vue-spear-tip/style'
 ```
 
 #### Use
@@ -40,11 +56,10 @@ Need enable experimental decorators in `tsconfig.json`:
 <script lang="ts">
   import {VST, Prop, Watch, Computed, BaseComponent} from 'vue-spear-tip'
 
-
   /**
-   * Example
+   * Component example
    * @author CHORNY
-   * @copyright https://smartrus.orgVueClassComponent
+   * @copyright https://smartrus.org
    */
   @VST export default class Example extends BaseComponent {
     @Prop(String, null) readonly text: string = ''

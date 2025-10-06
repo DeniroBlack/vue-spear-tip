@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 
-import LazyComponents from './components/LazyComponents'
+import * as LazyComponents from './components/LazyComponents'
 import DocsWithExamples from './components/DocsWithExamples.vue'
 
 
