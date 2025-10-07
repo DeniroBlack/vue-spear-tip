@@ -1,6 +1,7 @@
 import {VueClass, Prop, Watch} from '../../../core'
+import BaseComponent from '../../BaseComponent.vue'
 
-export default class ButtonInherited extends VueClass {
+export default class ButtonInherited extends BaseComponent {
   emits = [
     'click',
     'touchstart',
@@ -31,7 +32,7 @@ export default class ButtonInherited extends VueClass {
   @Prop(String, null) readonly borderColorActive: string | null = null
   @Prop(String, null) readonly boxShadowColor: string | null = null
   
-  @Prop(String) readonly fontSize: string | null = null
+  @Prop(String) readonly fontSize: string | null = '1rem'
   @Prop(String) readonly fontFamily: string | null = null
   
   // @Prop(String) readonly bgHover: string = '#333'
@@ -57,7 +58,7 @@ export default class ButtonInherited extends VueClass {
   
   @Prop(String, null) readonly theme:
     'success' | 'default' | 'primary' | 'warning' | 'danger' | 'info' | 'pink' | 'purple' | 'indigo' | 'grey' | 'white' |
-    'yellow' | null = 'default'
+    'yellow' | 'black' | null = 'default'
   
   backgroundCss: string = ''
   boxShadowCss: string = ''
@@ -79,7 +80,7 @@ export default class ButtonInherited extends VueClass {
   hasTouchpad: boolean = false // TODO добавить проверку и Hammer
   mountedParent() {
     // this.showButton = true
-    this.randomClass = 'button-c'//+Engine.generateRandomKey(32)
+    this.randomClass = 'button-c'+Math.random().toString().split('.')[1]
     this.updateTheme()
     if (this.$refs?.button){ // @ts-ignore
       // const hammer = new window['Hammer'](this.$refs?.button)
@@ -200,14 +201,32 @@ export default class ButtonInherited extends VueClass {
       this.currentBorderColorActive = '#b755ff'
       this.currentBoxShadowColor = '#7f18c5'
       this.currentColorActive = '#ffffff'
+    } else if (this.theme == 'indigo'){
+      this.currentBg = '#5b2cdd'
+      this.currentColor = '#fff'
+      this.currentColorHover = '#e7c0ff'
+      this.currentBorderColor = '#6b39f3'
+      this.currentBgActive = '#8855ff'
+      this.currentBorderColorActive = '#6f55ff'
+      this.currentBoxShadowColor = '#5a18c5'
+      this.currentColorActive = '#ffffff'
     } else if (this.theme == 'black'){
       this.currentBg = '#32383e'
       this.currentColor = '#fff'
-      this.currentColorHover = '#fcb7ab'
+      this.currentColorHover = '#ebf8b3'
       this.currentBorderColor = '#32383e'
       this.currentBgActive = '#3b4249'
       this.currentBorderColorActive = '#3b4249'
       this.currentBoxShadowColor = '#32383e'
+      this.currentColorActive = '#ffffff'
+    } else if (this.theme == 'grey'){
+      this.currentBg = '#5f6163'
+      this.currentColor = '#fff'
+      this.currentColorHover = '#cec6c4'
+      this.currentBorderColor = '#898d90'
+      this.currentBgActive = '#878c92'
+      this.currentBorderColorActive = '#686c71'
+      this.currentBoxShadowColor = '#626a71'
       this.currentColorActive = '#ffffff'
     }
     this.currentBg = this.bg ?? (this.currentBg ?? bg)

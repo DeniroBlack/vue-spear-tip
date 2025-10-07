@@ -1,6 +1,6 @@
 {
   "name": "vue-spear-tip",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "type": "module",
   "scripts": {
     "build": "vite build --mode examples-build",
@@ -37,7 +37,8 @@
     "unocss-preset-scalpel": "^1.2.7",
     "vite": "^7.*",
     "vite-plugin-pug": "^0.4.1",
-    "vue": "^3.5.*"
+    "vue": "^3.5.*",
+    "vue-router": "^4.5.1"
   },
   "license": "MIT",
   "keywords": [

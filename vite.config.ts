@@ -11,7 +11,6 @@ import typescript from '@rollup/plugin-typescript'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 await promises.copyFile(resolve(__dirname, 'index.d.ts'), resolve(__dirname, 'dist/vue-spear-tip.d.ts'))
-await promises.copyFile(resolve(__dirname, 'src/resources/VST_LOGO.png'), resolve(__dirname, 'docs/VST_LOGO.png')) // @ts-ignore
 
 await promises.mkdir(resolve(__dirname, 'dist'), {recursive: true})
 await promises.mkdir(resolve(__dirname, 'src/replaceable/Elements/Button'), {recursive: true})
@@ -19,11 +18,12 @@ await promises.writeFile(
   resolve(__dirname, 'src/replaceable/Elements/Button/ButtonInherited.ts'),
   (await promises.readFile(
     resolve(__dirname, 'src/components/Elements/Button/ButtonInherited.ts'))
-  ).toString().replace(
-    `'../../../core'`, `'../../../core'\nimport BaseComponent from '../../BaseComponent.vue'`
-  ).replace(
-    `extends VueClass`, `extends BaseComponent`
-  )
+  ).toString()
+  // .replace(
+  //   `'../../../core'`, `'../../../core'\nimport BaseComponent from '../../BaseComponent.vue'`
+  // ).replace(
+  //   `extends VueClass`, `extends BaseComponent`
+  // )
 )
 
 // TODO перед прод сборкой подменять наследуемые компоненты с внедрением зависимостей
@@ -94,6 +94,9 @@ export default defineConfig(async (options) => {
     }
   
   return {
+    esbuild: {
+      keepNames : true,
+    },
     // sourcemap: false,
     css: {
       devSourcemap: false,
@@ -161,6 +164,8 @@ export default defineConfig(async (options) => {
             resolve(__dirname, 'src/replaceable/BaseComponent.vue'),
             resolve(__dirname, 'dist/replaceable/BaseComponent.vue')
           )
+          await promises.copyFile(resolve(__dirname, 'src/resources/VST_LOGO.png'), resolve(__dirname, 'docs/VST_LOGO.png')) // @ts-ignore
+          await promises.copyFile(resolve(__dirname, 'src/resources/favicon.ico'), resolve(__dirname, 'docs/favicon.ico')) // @ts-ignore
           // Example: Copy a file
           // fs.copyFileSync('dist/index.html', 'some/other/path/index.html');
         },

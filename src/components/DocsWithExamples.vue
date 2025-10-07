@@ -11,13 +11,10 @@
             div Vue Spear Tip
           ul(class="flex space-x-6")
             li(v-for="item in menu" :key="item.name")
-              a(
-                :href="item.url"
-                class="text-[#11a1e2ff]"
-              ) {{ item.name }}
+              RouterLink(:to="item.url") {{ item.name }}
         div(class="flex items-center space-x-4")
           a(
-            href="https://github.com/your-repo"
+            href="https://github.com/smartrusorg/vue-spear-tip"
             target="_blank"
             class="text-[#b33c62ff]"
           ) GitHub
@@ -47,18 +44,8 @@
     //        )
     //          h3(class="font-600 text-[#2e8b57] mb-2") {{ card.title }}
     //          p(class="text-sm text-[#3cb371]") {{ card.description }}
-    div(class="flex px20px py15px")
-      div
-        img(src="../resources/VST_LOGO.png" class="w100px")
-      div.
-        <h1>What is the Vue Spear Tip?</h1>
-
-        Vue Spear Tip - is a global wrapper library for Vue 3 components using decorators. It allows you to describe a Vue component as an object-oriented class with inheritance, as well as provides a set of pre-built fields and components assembled from various open-source libraries that we constantly update. We are always looking for ways to improve our offerings.
-  //
-  //  div(class="h30px w200px m10px")
-  //    Button(
-  //      class="w100%"
-  //    ) Example!!!
+    div(class="flex flex-col items-center justify-center")
+      RouterView
 </template>
 
 
@@ -73,15 +60,19 @@ import 'uno.css'
  */
 @VST export default class DocsWithExamples extends VueClass {
   @Prop(String) readonly text: string = ''
+  selectOnce: number|null = 2
+  selectOnceItems: any[] = [{key:1, value: 'Test'}, {key:2, value: 'Second value'}, ]
+  selectMulti: number[]|null = [2,1]
+  selectMultiItems: any[] = [{key:1, value: 'Test'}, {key:2, value: 'Second value'}, {key:3, value: 'Third'}]
+  selectTags: {value:string, key?:string|number}[]|null = [{key:4, value: 'Fourth'}]
   beforeMount() {
-    console.log('test')
   }
   menu = [
-    { name: 'Main', url: '#' },
-    { name: 'Documentation', url: '#' },
+    { name: 'About', url: '/' },
+    // { name: 'Examples', url: '#' },
+    { name: 'Documentation', url: '/documentation' },
     { name: 'Library', url: '#' },
-    { name: 'Examples', url: '#' },
-    { name: 'About', url: '#' }
+    { name: 'Donate', url: '#' },
   ]
   sections = [
     {
@@ -127,11 +118,11 @@ body, html
   @apply p0 m0 box-sizing-border-box
   font-family: "Nunito Sans", sans-serif
 a
-  @apply decoration-none! hover:decoration-underline!
+  @apply decoration-none! hover:decoration-underline! text-lightblue-500
 </style>
 
 <style lang="sass" scoped>
-span
-  @apply bg-red-200!
+//span
+//  @apply bg-red-200!
 </style>
 

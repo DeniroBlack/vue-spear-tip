@@ -36,6 +36,17 @@ Need enable experimental decorators in `tsconfig.json`:
 }
 ```
 
+Need keep names in `vite.config.ts`:
+
+```json5
+{
+  // ... another
+  esbuild: {
+    keepNames : true,
+  },
+}
+```
+
 #### Add kit components styles
 ```ts
 import 'vue-spear-tip/style'
@@ -48,13 +59,13 @@ import 'vue-spear-tip/style'
   div
     div(class="h30px w200px m10px")
       Button(
-        @cliclTap="test = 'test'"
+        @clickTap="test = 'test'"
       ) Example
 </template>
 
 
 <script lang="ts">
-  import {VST, Prop, Watch, Computed, BaseComponent} from 'vue-spear-tip'
+  import {VST, Prop, Watch, Computed, BaseComponent, Button} from 'vue-spear-tip'
 
   /**
    * Component example
@@ -62,6 +73,7 @@ import 'vue-spear-tip/style'
    * @copyright https://smartrus.org
    */
   @VST export default class Example extends BaseComponent {
+    components = {Button}
     @Prop(String, null) readonly text: string = ''
     test: string = ''
     
