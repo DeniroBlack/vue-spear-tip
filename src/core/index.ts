@@ -1,9 +1,9 @@
 import IGlobalComponent from '../Interfaces/IGlobalComponent'
 
 declare global {
-  var __VST: IGlobalComponent
+  var $VST: IGlobalComponent
 }
-globalThis.__VST = {
+globalThis.$VST = {
   _vueClassInstances: {},
   _vueClassProps: {},
   _vueClassWatchers: {},

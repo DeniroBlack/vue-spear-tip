@@ -1,65 +1,35 @@
 <template lang="pug">
-  div
-    link(rel="preconnect" href="https://fonts.googleapis.com")
-    link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
-    link(href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet")
-    header(class="bg-[#fcffdfff] w100%")
-      .row(class="container mx-auto px-4 py-3 flex items-center justify-between w100%")
-        .col-2
-        .col-5(class="flex items-center space-x-10")
-          .row
-            .col-6(class="text-xl flex flex-col items-center font-700 tracking-tight")
-              img(src="../resources/VST_LOGO.png" class="w80px")
-              div
-                span Vue Spear Tip
-                small(class="ml8px fs-normal text-emerald-500") {{ actualVersion }}
-            .col-6(
-              class="flex items-end justify-center h100%"
-            )
-              ul(class="flex space-x-6")
-                li(
-                  v-for="item in menu"
-                  :key="item.name"
-                  :class=`{
-                    'fw-bold': $route.path == item.url
-                  }`
-                )
-                  RouterLink(:to="item.url") {{ item.name }}
-        .col-5(class="flex items-center space-x-4 justify-center h100%")
-          a(
-            href="https://github.com/smartrusorg/vue-spear-tip"
-            target="_blank"
-            class="text-[#b33c62ff]"
-          ) GitHub
-        .col-2
-    div(class="flex flex-col items-center justify-center")
-      RouterView
+  div(class="flex px20px py15px") Kit Intro
 </template>
 
 
 <script lang="ts">
-import {VST, Prop, VueClass} from '../core'
-import {version} from '../../package.json'
+import {VST, Prop, BaseComponent} from '../../../core'
 
 /**
  * Example
  * @author CHORNY
  * @copyright https://smartrus.org
  */
-@VST export default class DocsWithExamples extends VueClass {
+@VST export default class InstallGuide extends BaseComponent {
   @Prop(String) readonly text: string = ''
   selectOnce: number|null = 2
   selectOnceItems: any[] = [{key:1, value: 'Test'}, {key:2, value: 'Second value'}, ]
   selectMulti: number[]|null = [2,1]
   selectMultiItems: any[] = [{key:1, value: 'Test'}, {key:2, value: 'Second value'}, {key:3, value: 'Third'}]
   selectTags: {value:string, key?:string|number}[]|null = [{key:4, value: 'Fourth'}]
-  actualVersion: string = `v${version}`
   beforeMount() {
+    // setTimeout(() => this.selectOnce = 3, 2000)
+    // setTimeout(() => this.selectMulti = [1,3], 1000)
+    // setTimeout(() => this.selectOnceItems.push({ "key": 3, "value": "S3" }), 1000)
+    // setTimeout(() => this.selectTags = [ { "key": 2, "value": "Second value" }], 3000)
   }
   menu = [
     { name: 'About', url: '/' },
+    // { name: 'Examples', url: '#' },
     { name: 'Documentation', url: '/documentation' },
-    { name: 'Donate', url: '/donate' },
+    { name: 'Library', url: '#' },
+    { name: 'Donate', url: '#' },
   ]
   sections = [
     {
@@ -105,9 +75,7 @@ body, html
   @apply p0 m0 box-sizing-border-box
   font-family: "Nunito Sans", sans-serif
 a
-  @apply decoration-none! hover:decoration-underline! text-lightblue-500
-li
-  list-style: none
+  @apply decoration-none! hover:decoration-underline!
 </style>
 
 <style lang="sass" scoped>

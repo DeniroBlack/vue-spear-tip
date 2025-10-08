@@ -1,0 +1,138 @@
+.row-wrapper
+  container-type: inline-size
+  container-name: grid-container
+
+.row
+  width: 100%
+  display: grid
+  grid-template-columns: repeat(12, 1fr)
+  align-content: start
+  grid-auto-rows: auto
+  align-items: start
+
+  .col-1,
+  .col-2,
+  .col-3,
+  .col-4,
+  .col-5,
+  .col-6,
+  .col-7,
+  .col-8,
+  .col-9,
+  .col-10,
+  .col-11,
+  .col-12
+    position: relative
+    grid-column: span 1 // по умолчанию для всех колонок
+    align-self: start
+    flex: 1
+    display: flex // Добавлено для лучшего контроля содержимого
+    flex-direction: column
+
+  .col-2 
+    grid-column: span 2
+  .col-3 
+    grid-column: span 3
+  .col-4 
+    grid-column: span 4
+  .col-5 
+    grid-column: span 5
+  .col-6 
+    grid-column: span 6
+  .col-7 
+    grid-column: span 7
+  .col-8 
+    grid-column: span 8
+  .col-9 
+    grid-column: span 9
+  .col-10
+    grid-column: span 10
+  .col-11
+    grid-column: span 11
+  .col-12 
+    grid-column: span 12
+
+  .row-1
+    grid-row: span 1
+  .row-2
+    grid-row: span 2
+  .row-3
+    grid-row: span 3
+  .row-4
+    grid-row: span 4
+  .row-5
+    grid-row: span 5
+  .row-6
+    grid-row: span 6
+  .row-7
+    grid-row: span 7
+  .row-8
+    grid-row: span 8
+  .row-9
+    grid-row: span 9
+  .row-10
+    grid-row: span 10
+  .row-11
+    grid-row: span 11
+  .row-12
+    grid-row: span 12
+
+/* Мобильные устройства */
+@media (max-width: 767px)
+  .row
+    grid-template-columns: repeat(2, 1fr)
+
+    .col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
+    .col-7, .col-8, .col-9, .col-10, .col-11, .col-12
+      grid-column: span 2
+
+/* Планшеты */
+@media (min-width: 768px) and (max-width: 1279px)
+  .row
+    grid-template-columns: repeat(4, 1fr)
+
+    .col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
+    .col-7, .col-8
+      grid-column: span 2
+
+    .col-9, .col-10, .col-11, .col-12
+      grid-column: span 4
+
+/* Ноутбуки (768x1366) */
+@media (min-width: 1280px) and (max-width: 1366px)
+  .row
+    grid-template-columns: repeat(12, 1fr)
+
+/* Десктопные версии */
+@media (min-width: 1367px)
+  .row
+    grid-template-columns: repeat(12, 1fr)
+
+
+/* Container Queries (для современных браузеров и поддержки расстановки внутри контейнеров) */
+@container grid-container (max-width: 767px)
+  .row
+    grid-template-columns: repeat(2, 1fr)
+
+    .col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
+    .col-7, .col-8, .col-9, .col-10, .col-11, .col-12
+      grid-column: span 2
+
+@container grid-container (min-width: 768px) and (max-width: 1279px)
+  .row
+    grid-template-columns: repeat(4, 1fr)
+
+    .col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
+    .col-7, .col-8
+      grid-column: span 2
+
+    .col-9, .col-10, .col-11, .col-12
+      grid-column: span 4
+
+@container grid-container (min-width: 1280px) and (max-width: 1366px)
+  .row
+    grid-template-columns: repeat(12, 1fr)
+
+@container grid-container (min-width: 1367px)
+  .row
+    grid-template-columns: repeat(12, 1fr)

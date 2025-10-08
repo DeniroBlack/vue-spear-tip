@@ -11,6 +11,7 @@ import typescript from '@rollup/plugin-typescript'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 await promises.copyFile(resolve(__dirname, 'index.d.ts'), resolve(__dirname, 'dist/vue-spear-tip.d.ts'))
+await promises.copyFile(resolve(__dirname, 'src/kit/styles/grid.min.css'), resolve(__dirname, 'dist/grid-style.css'))
 
 await promises.mkdir(resolve(__dirname, 'dist'), {recursive: true})
 await promises.mkdir(resolve(__dirname, 'src/replaceable/Elements/Button'), {recursive: true})
@@ -78,6 +79,7 @@ export default defineConfig(async (options) => {
       lib: {
         entry: {
           'index.js': resolve(__dirname, 'src/index.ts'),
+          // 'grid-style': resolve(__dirname, 'src/kit/styles/grid.min.css'),
         },
         name: 'VueSpearTip',
         fileName: (format: string, entryName: string) => `vue-spear-tip.${format}.js`,
@@ -91,6 +93,11 @@ export default defineConfig(async (options) => {
         cssFileName: 'vue-spear-tip'
       },
       manifest: true,
+      // resolve: {
+      //   alias: {
+      //     'vue-spear-tip/grid': resolve(__dirname, 'src/kit/styles/grid.scss')
+      //   }
+      // }
     }
   
   return {

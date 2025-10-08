@@ -128,7 +128,7 @@ button
   display: inline-block
   border: 1px solid #fff
   transition: all 0.04s ease-in-out
-  padding: 10px 10px
+  padding: 10px 18px
   //&.hover
   //  opacity: 0.9
   .left-icon

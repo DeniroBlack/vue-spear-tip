@@ -114,7 +114,6 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
                 const value = (JSON.parse(JSON.stringify((this.itemsInner.find(
                     v => (v?.key) === modelValue)?.value ?? null
                 ))))
-                console.log('valuevalue', value, modelValue, e.detail?.value)
                 if (value) {
                   this.tagify.addTags(this.reactiveValue = value)
                   this.value = modelValue
@@ -175,6 +174,7 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
         }
       },
       templates: {
+      // todo доработать вставку html замену шаблона элементов, идеально если через слоты можно было бы шаблон указать
       //   tag: (t, i) => {
       //     let value: any  = t.value?.value ?? t.value;
       //     if (this.mode == 'select' && (value = i?.DOM?.originalInput?.getAttribute?.('value')?.trim?.())?.length) {
@@ -194,6 +194,7 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
       //   },
       //
       //   // dropdownItem: (t, i) => {
+      //   // todo найти в исходниках tagify оригинальный шаблон
       //   //   return `<div class='tagify__dropdown'>${t.value}</div>`
       //   // }
       },
@@ -220,7 +221,6 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
         this.nextTick(() => {
           this.tagify?.addTags(this.value ?? '')
         }, 2)
-        console.log('mu val', this.tagify, val, this.value, this.itemsInner)
       }
     }
     else if (this.mode == 'tags'){
@@ -254,7 +254,7 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
 
 <style lang="sass">
 .tagify
-  outline: 2px solid white !important
+  outline: 2px solid transparent !important
   @apply min-w220px! min-h44px! flex! items-center justify-center rounded-3xl
   --tags-border-color: #c1c7cf !important
   --tag-hide-transition: .1ms !important

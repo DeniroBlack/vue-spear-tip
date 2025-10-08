@@ -1,6 +1,6 @@
 {
   "name": "vue-spear-tip",
-  "version": "0.1.8",
+  "version": "0.1.19",
   "type": "module",
   "scripts": {
     "build": "vite build --mode examples-build",
@@ -19,7 +19,8 @@
         "module": "./dist/vue-spear-tip.d.ts"
       }
     },
-    "./style": "./dist/vue-spear-tip.css"
+    "./style": "./dist/vue-spear-tip.css",
+    "./grid": "./dist/grid-style.css"
   },
   "files": [
     "dist",

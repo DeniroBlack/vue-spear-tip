@@ -7,15 +7,15 @@
  */
 export const Watch = function(propertyName: string, deep: boolean = false, immediate: boolean = false): any {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => { // @ts-ignore
-    if (!globalThis.__VST._vueClassInstances[target.constructor.name]) {
+    if (!globalThis.$VST._vueClassInstances[target.constructor.name]) {
       // @ts-ignore
-      globalThis.__VST._vueClassInstances[target.constructor.name] = new target.constructor
+      globalThis.$VST._vueClassInstances[target.constructor.name] = new target.constructor
       // @ts-ignore
-      globalThis.__VST._vueClassInstances[target.constructor.name].name =
+      globalThis.$VST._vueClassInstances[target.constructor.name].name =
         // @ts-ignore
-        globalThis.__VST._vueClassInstances[target.constructor.name]?.constructor?.name?.toString()
+        globalThis.$VST._vueClassInstances[target.constructor.name]?.constructor?.name?.toString()
         // @ts-ignore
-        ?? globalThis.__VST._vueClassInstances[target.constructor.name]['name']
+        ?? globalThis.$VST._vueClassInstances[target.constructor.name]['name']
         ??  ''
     }
     if(!target?.constructor?.prototype?.__vue_watch__) {
@@ -25,18 +25,18 @@ export const Watch = function(propertyName: string, deep: boolean = false, immed
       target.constructor.prototype.__vue_watch__[target.constructor.name] = {}
     } // @ts-ignore
     target.constructor.prototype.__vue_watch__[target.constructor.name][propertyName]
-      = globalThis.__VST._vueClassInstances[target.constructor.name][propertyKey]
+      = globalThis.$VST._vueClassInstances[target.constructor.name][propertyKey]
 
     // @ts-ignore
-    if(!globalThis.__VST._vueClassWatchers[target.constructor.name]) {
+    if(!globalThis.$VST._vueClassWatchers[target.constructor.name]) {
       // @ts-ignore
-      globalThis.__VST._vueClassWatchers[target.constructor.name] = {}
+      globalThis.$VST._vueClassWatchers[target.constructor.name] = {}
     }
 
     // @ts-ignore
-    globalThis.__VST._vueClassWatchers[target.constructor.name][propertyName] = {
+    globalThis.$VST._vueClassWatchers[target.constructor.name][propertyName] = {
       // @ts-ignore
-      handler: globalThis.__VST._vueClassInstances[target.constructor.name][propertyKey],
+      handler: globalThis.$VST._vueClassInstances[target.constructor.name][propertyKey],
       deep: deep,
       immediate: immediate,
     }

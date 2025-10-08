@@ -50,6 +50,8 @@ Need keep names in `vite.config.ts`:
 #### Add kit components styles
 ```ts
 import 'vue-spear-tip/style'
+// If need auto resizable .row .col-* styles
+import 'vue-spear-tip/grid'
 ```
 
 #### Use
@@ -97,3 +99,4 @@ import 'vue-spear-tip/style'
 </style>
 
 ```
+
