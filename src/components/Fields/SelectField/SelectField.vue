@@ -263,10 +263,10 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
   padding: 0 0 0 10px !important
 
 .tagify__input
-  @apply min-w120px!
+  @apply min-w120px! fs-0.9rem
   transition: 100ms !important
   padding: .3em .5em !important
-  font-size: 13px
+  //font-size: 13px
 
 .tagify--empty.tagify--select
   //@apply min-w120px!
@@ -286,7 +286,7 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
   background: #fff repeating-linear-gradient(45deg, transparent, transparent 10px, #fafffd 10px, #fafffd 20px) !important
 
 .tagify__dropdown__item
-  @apply px12px! py8px! my2px
+  @apply px12px! py8px! my2px fs-1rem
   border: 1px solid rgba(152, 177, 169, 0.37)
 
 .tagify__dropdown__item--active
@@ -307,14 +307,14 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
     content: ""
 
 .tagify__tag
-  @apply mt2px! fs-1rem!
+  @apply fs-1rem!
 
 .tagify--focus
   @apply outline-stone-400! outline-1px! border-color-#c1c7cf border-solid border-1px!
 
 :not(.vst-select-multi)
   .tagify--focus.tagify--noTags
-    @apply pt5px! min-h40px! mt4px
+    @apply pt5px! min-h40px!
   .tagify--select:not(.tagify--empty)
     @apply min-h40px! mt5px
 

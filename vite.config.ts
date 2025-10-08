@@ -11,7 +11,6 @@ import typescript from '@rollup/plugin-typescript'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 await promises.copyFile(resolve(__dirname, 'index.d.ts'), resolve(__dirname, 'dist/vue-spear-tip.d.ts'))
-await promises.copyFile(resolve(__dirname, 'src/kit/styles/grid.min.css'), resolve(__dirname, 'dist/grid-style.css'))
 
 await promises.mkdir(resolve(__dirname, 'dist'), {recursive: true})
 await promises.mkdir(resolve(__dirname, 'src/replaceable/Elements/Button'), {recursive: true})
@@ -173,6 +172,7 @@ export default defineConfig(async (options) => {
           )
           await promises.copyFile(resolve(__dirname, 'src/resources/VST_LOGO.png'), resolve(__dirname, 'docs/VST_LOGO.png')) // @ts-ignore
           await promises.copyFile(resolve(__dirname, 'src/resources/favicon.ico'), resolve(__dirname, 'docs/favicon.ico')) // @ts-ignore
+          await promises.copyFile(resolve(__dirname, 'src/kit/styles/grid.min.css'), resolve(__dirname, 'dist/grid-style.css'))
           // Example: Copy a file
           // fs.copyFileSync('dist/index.html', 'some/other/path/index.html');
         },
