@@ -1,6 +1,6 @@
 <template v-once lang="pug">
   div(
-    class="d-inline-block mx2px my1px"
+    class="d-inline-block mx2px my1px w100%"
     :class=`{
       'vst-select-multi': mode == 'multi' || mode == 'tags',
     }`
@@ -16,9 +16,6 @@ import Tagify from './tagify.esm.js'
 import {Prop, VST, Watch} from '../../../core'
 import FieldComponent from '../../../replaceable/FieldComponent.vue'
 
-// 1. Вставка значений для выборки и отслеживание изменений (ajax на onChange пример сделать)
-// 1.1. Отслеживание value отключить в tagify
-// 2. Отправка v-model при изменениях (любых)
 // 3. Html выборка
 // 4. Html отображение значения
 
@@ -27,7 +24,7 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
  * @author CHORNY
  * @copyright https://smartrus.org
  */
-@VST export default class Select extends FieldComponent {
+@VST export default class SelectField extends FieldComponent {
   emits = [
     'click',
   ]
@@ -275,6 +272,7 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
   //@apply min-w120px!
   padding: 5px 0 0 15px !important
 .tagify__dropdown
+  @apply mt4px! border-0!
   &.tagify__dropdown__openInModal
     @apply z-999999!
 
@@ -309,11 +307,16 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
     content: ""
 
 .tagify__tag
-  @apply mt2px!
+  @apply mt2px! fs-1rem!
+
+.tagify--focus
+  @apply outline-stone-400! outline-1px! border-color-#c1c7cf border-solid border-1px!
 
 :not(.vst-select-multi)
   .tagify--focus.tagify--noTags
-    @apply pt5px!
+    @apply pt5px! min-h40px! mt4px
+  .tagify--select:not(.tagify--empty)
+    @apply min-h40px! mt5px
 
 .vst-select-multi
   .tagify__tag

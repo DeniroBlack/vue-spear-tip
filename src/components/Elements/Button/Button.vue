@@ -103,14 +103,11 @@ import {Prop, VST, Watch} from '../../../core'
 import ButtonInherited from './ButtonInherited'
 
 /**
- * Кнопка
+ * Кнопка (наследуемая)
  * @author CHORNY (created 02.03.2024 4:32)
  * @copyright https://smartrus.org
  */
 @VST export default class Button extends ButtonInherited {}
-// export {
-//   ButtonInherited
-// }
 </script>
 
 <style scoped lang="sass">

@@ -1,9 +1,7 @@
-@charset "UTF-8";
 .row-wrapper {
     container-type: inline-size;
     container-name: grid-container;
 }
-
 .row {
     width: 100%;
     display: grid;
@@ -100,14 +98,23 @@
 .row .row-12 {
     grid-row: span 12;
 }
-
 /* Мобильные устройства */
 @media (max-width: 767px) {
     .row {
         grid-template-columns: repeat(2, 1fr);
     }
-    .row .col-1, .row .col-2, .row .col-3, .row .col-4, .row .col-5, .row .col-6,
-    .row .col-7, .row .col-8, .row .col-9, .row .col-10, .row .col-11, .row .col-12 {
+    .row .col-1,
+    .row .col-2,
+    .row .col-3,
+    .row .col-4,
+    .row .col-5,
+    .row .col-6,
+    .row .col-7,
+    .row .col-8,
+    .row .col-9,
+    .row .col-10,
+    .row .col-11,
+    .row .col-12 {
         grid-column: span 2;
     }
 }
@@ -116,11 +123,20 @@
     .row {
         grid-template-columns: repeat(4, 1fr);
     }
-    .row .col-1, .row .col-2, .row .col-3, .row .col-4, .row .col-5, .row .col-6,
-    .row .col-7, .row .col-8 {
+    .row .col-1,
+    .row .col-2,
+    .row .col-3,
+    .row .col-4,
+    .row .col-5,
+    .row .col-6,
+    .row .col-7,
+    .row .col-8 {
         grid-column: span 2;
     }
-    .row .col-9, .row .col-10, .row .col-11, .row .col-12 {
+    .row .col-9,
+    .row .col-10,
+    .row .col-11,
+    .row .col-12 {
         grid-column: span 4;
     }
 }
@@ -141,24 +157,43 @@
     .row {
         grid-template-columns: repeat(2, 1fr);
     }
-    .row .col-1, .row .col-2, .row .col-3, .row .col-4, .row .col-5, .row .col-6,
-    .row .col-7, .row .col-8, .row .col-9, .row .col-10, .row .col-11, .row .col-12 {
+    .row .col-1,
+    .row .col-2,
+    .row .col-3,
+    .row .col-4,
+    .row .col-5,
+    .row .col-6,
+    .row .col-7,
+    .row .col-8,
+    .row .col-9,
+    .row .col-10,
+    .row .col-11,
+    .row .col-12 {
         grid-column: span 2;
     }
 }
-@container grid-container (min-width: 768px) and (max-width: 1279px) {
+@container grid-container (min-width: 768px) && (max-width: 1279px) {
     .row {
         grid-template-columns: repeat(4, 1fr);
     }
-    .row .col-1, .row .col-2, .row .col-3, .row .col-4, .row .col-5, .row .col-6,
-    .row .col-7, .row .col-8 {
+    .row .col-1,
+    .row .col-2,
+    .row .col-3,
+    .row .col-4,
+    .row .col-5,
+    .row .col-6,
+    .row .col-7,
+    .row .col-8 {
         grid-column: span 2;
     }
-    .row .col-9, .row .col-10, .row .col-11, .row .col-12 {
+    .row .col-9,
+    .row .col-10,
+    .row .col-11,
+    .row .col-12 {
         grid-column: span 4;
     }
 }
-@container grid-container (min-width: 1280px) and (max-width: 1366px) {
+@container grid-container (min-width: 1280px) && (max-width: 1366px) {
     .row {
         grid-template-columns: repeat(12, 1fr);
     }

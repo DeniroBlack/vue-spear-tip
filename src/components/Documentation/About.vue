@@ -15,14 +15,14 @@
         b Why? -&nbsp;
         b(
           class="text-green-600 underline underline-double underline-amber-200"
-        ) Simple use with support any device 📱🔳💻🖥️
+        ) Easy to use with support on any device 📱🔳💻🖥️
   //h3(class="text-center") Elements
   div(class="flex flex-col items-center justify-center w[calc(100%-80px)] mx40px!")
     h4(class="text-center") Reactive select fields (with v-model)
     .row(class="p5px w100%")
       .col-4(class="px30px")
         b Single select
-        Select(
+        SelectField(
           placeholder="Select one value"
           v-model="selectOnce"
           :items="selectOnceItems"
@@ -38,7 +38,7 @@
             span {{ selectOnceItems }}
       .col-4(class="px30px")
         b Multi select
-        Select(
+        SelectField(
           mode="multi"
           placeholder="Select multi value"
           v-model="selectMulti"
@@ -55,7 +55,7 @@
             span {{ selectMultiItems }}
       .col-4(class="px30px")
         b Tags select with presets
-        Select(
+        SelectField(
           mode="tags"
           placeholder="Select tags values with preset"
           v-model="selectTags"
@@ -71,8 +71,9 @@
             b :items =&nbsp;
             span {{ selectTagsItems }}
     h4(class="text-center") Buttons
-    div(class="m10px flex flex-wrap gap-y-6px")
+    div(class="m10px flex flex-wrap gap-y-6px items-center justify-center")
       Button(
+
       ) Default
       Button(
         theme="black"
@@ -94,6 +95,10 @@
       Button(
         theme="purple"
       ) Purple
+      StringField(
+        class="w320px"
+        placeholder="Type text"
+      )
       Button(
         theme="pink"
       ) Pink
@@ -113,7 +118,7 @@
         theme="success"
       ) Success
     h4(class="text-center").
-      Auto resizable window and block grid elements (And much more. See the
+      Auto resizable window and container grid elements (And much more. See the
       <router-link to="/documentation">documentation</router-link>)
     div(class="w100% flex")
       #blockAnimationResize
@@ -243,6 +248,8 @@ import 'uno.css'
   flex-shrink: 0
   width: 100% // Для мобильных устройств
 
+  @media (max-width: 767px)
+    display: none
   // Анимация только для экранов больше 767px
   @media (min-width: 768px)
     width: 0

@@ -1,5 +1,7 @@
-import Select from '../../components/Fields/Select'
+import SelectField from '../../components/Fields/SelectField'
+import StringField from '../../components/Fields/StringField'
 
 export {
-  Select,
+  SelectField,
+  StringField,
 }
