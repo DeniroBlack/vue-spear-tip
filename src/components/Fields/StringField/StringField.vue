@@ -20,7 +20,7 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
  * @copyright https://smartrus.org
  */
 @VST export default class StringField extends FieldComponent {
-  emits = ['click']
+  emits = ['input', 'change']
   declare $refs: {
     selectInput: HTMLInputElement
   }
@@ -28,10 +28,10 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
   @Prop(String) readonly placeholder: string = 'Введите текст'
   // @Prop(Array) readonly items: { key: string | number, value: string, selected?: string }[]|null = null
   beforeMount() {
+    this.value = this.modelValue || this.inputValue || ''
   }
 
   mounted() {
-    this.value = this.modelValue || this.inputValue || ''
     // if extendable code here
   }
   mountedParent() {
@@ -40,6 +40,8 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
 
   // Watch dynamic changes to items prop
   @Watch('value', true) _valueWatch(value: any) {
+    this.$emit('input', value)
+    this.$emit('change', value)
     this.$emit('update:modelValue', value)
   }
   // // Generate computed class prop

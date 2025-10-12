@@ -3,21 +3,21 @@
     div(class="flex px20px py15px w220px min-h100%!")
       GuidesMenu
     div(class="w[calc(100%-260px)]")
-      h1 Laravel Config Guide
+      h1 BarcodeKitElement
       div soon
 </template>
 
 
 <script lang="ts">
-import {VST, Prop, BaseComponent} from '../../../core'
-import GuidesMenu from '../GuidesMenu.vue'
+import {VST, Prop, BaseComponent} from '../../../../core'
+import GuidesMenu from '../../GuidesMenu.vue'
 
 /**
- * LaravelConfigGuide
+ * BarcodeKitElement
  * @author CHORNY
  * @copyright https://smartrus.org
  */
-@VST export default class LaravelConfigGuide extends BaseComponent {
+@VST export default class BarcodeKitElement extends BaseComponent {
   components = {GuidesMenu}
 }
 </script>

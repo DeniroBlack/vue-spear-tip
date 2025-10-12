@@ -3,16 +3,17 @@
     link(rel="preconnect" href="https://fonts.googleapis.com")
     link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
     link(href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet")
-    header(class="bg-[#fcffdfff] w100%")
+    header(class="bg-[#fcffdfff] w100% fixed t-0 z3003")
       .row(class="container mx-auto px-4 py-3 flex items-center justify-between w100%")
         .col-2
         .col-5(class="flex items-center space-x-10")
           .row
             .col-6(class="text-xl flex flex-col items-center font-700 tracking-tight")
-              img(src="../resources/VST_LOGO.png" class="w80px")
-              div
-                span Vue Spear Tip
-                small(class="ml8px fs-normal text-emerald-500") {{ actualVersion }}
+              RouterLink(to="/" class="text-center color-black")
+                img(src="../resources/VST_LOGO.png" class="w80px")
+                div
+                  span Vue Spear Tip
+                  small(class="ml8px fs-normal text-emerald-500") {{ actualVersion }}
             .col-6(
               class="flex items-end justify-center h100%"
             )
@@ -32,7 +33,7 @@
             class="text-[#b33c62ff]"
           ) GitHub
         .col-2
-    div(class="flex flex-col items-center justify-center")
+    div(class="flex flex-col items-center justify-center relative mt140px")
       RouterView
 </template>
 
@@ -40,63 +41,24 @@
 <script lang="ts">
 import {VST, Prop, VueClass} from '../core'
 import {version} from '../../package.json'
+import PageAbstract from './Documentation/PageAbstract.vue'
 
 /**
- * Example
+ * Documentation site
  * @author CHORNY
  * @copyright https://smartrus.org
  */
-@VST export default class DocsWithExamples extends VueClass {
+@VST export default class DocsWithExamples extends PageAbstract {
   @Prop(String) readonly text: string = ''
-  selectOnce: number|null = 2
-  selectOnceItems: any[] = [{key:1, value: 'Test'}, {key:2, value: 'Second value'}, ]
-  selectMulti: number[]|null = [2,1]
-  selectMultiItems: any[] = [{key:1, value: 'Test'}, {key:2, value: 'Second value'}, {key:3, value: 'Third'}]
-  selectTags: {value:string, key?:string|number}[]|null = [{key:4, value: 'Fourth'}]
   actualVersion: string = `v${version}`
-  beforeMount() {
-  }
   menu = [
     { name: 'About', url: '/' },
-    { name: 'Documentation', url: '/documentation' },
+    { name: 'Guide', url: '/guide' },
     { name: 'Donate', url: '/donate' },
   ]
-  sections = [
-    {
-      title: 'Начало работы',
-      links: [
-        { name: 'Установка', url: '#', active: true },
-        { name: 'Быстрый старт', url: '#' },
-        { name: 'Миграция с Vue 2', url: '#' }
-      ]
-    },
-    {
-      title: 'Основы',
-      links: [
-        { name: 'Создание компонента', url: '#' },
-        { name: 'Жизненный цикл', url: '#' },
-        { name: 'Пропсы и данные', url: '#' }
-      ]
-    }
-  ]
-  cards = [
-    {
-      title: 'Быстрый старт',
-      description: 'Узнайте, как быстро подключить и начать использовать библиотеку в вашем проекте.'
-    },
-    {
-      title: 'Миграция с Vue 2',
-      description: 'Пошаговое руководство по переходу с классического подхода на современный.'
-    },
-    {
-      title: 'API Reference',
-      description: 'Полное описание всех методов, свойств и возможностей библиотеки.'
-    },
-    {
-      title: 'Лучшие практики',
-      description: 'Рекомендации по эффективному использованию библиотеки в реальных проектах.'
-    }
-  ]
+  routedPageMount(data?: {from: any, to: any}) {
+    console.log(data)
+  }
 }
 </script>
 

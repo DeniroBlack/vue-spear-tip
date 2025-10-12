@@ -8,7 +8,7 @@
   grid-template-columns: repeat(12, 1fr)
   align-content: start
   grid-auto-rows: auto
-  align-items: start
+  align-items: stretch
 
   .col-1,
   .col-2,
@@ -23,10 +23,9 @@
   .col-11,
   .col-12
     position: relative
-    grid-column: span 1 // по умолчанию для всех колонок
-    align-self: start
-    flex: 1
-    display: flex // Добавлено для лучшего контроля содержимого
+    grid-column: span 1
+    align-self: stretch
+    display: flex
     flex-direction: column
 
   .col-2 

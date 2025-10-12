@@ -119,7 +119,7 @@
       ) Success
     h4(class="text-center").
       Auto resizable window and container grid elements (And much more. See the
-      <router-link to="/documentation">documentation</router-link>)
+      <router-link to="/guide">documentation</router-link>)
     div(class="w100% flex")
       #blockAnimationResize
       .row-wrapper(class="flex w100%")
@@ -219,7 +219,7 @@ import 'uno.css'
  * @author CHORNY
  * @copyright https://smartrus.org
  */
-@VST export default class DocsWithExamples extends VueClass {
+@VST export default class About extends VueClass {
   @Prop(String) readonly text: string = ''
   selectOnce: number|null = 2
   selectOnceItems: any[] = []

@@ -1,40 +1,41 @@
 <template lang="pug">
-  h3(class="flex px20px py15px") If you like Vue Spear Tip, you can donate for developmentin the following ways:
-  .row(class="w100%")
-    .col-6
-      div(
-        class="p40px"
-      )
-        b Crypto wallets
-        div
-          b(class="text-amber-500 user-select-none") BTC&nbsp;
-          span 1FZ11aFGQQzvm7Y7JGZYPq1UAip8eo3tZ7
-        div
-          b(class="text-emerald-500 user-select-none") USDT TRC20&nbsp;
-          span TBQGoQwuoeK5xX4S6dSozGiU6UBsJwZpTV
-        div
-          b(class="text-emerald-500 user-select-none") USDT ERC20&nbsp;
-          span 0x67AE41dBe771380784194Aac6661b70eA42D34A6
-        div
-          b(class="text-emerald-500 user-select-none") USDT TON&nbsp;
-          span UQBCvVree-8XUzHXUOq9HpROAbwC_26GPOgwAJJXYlgNCj2L
-        div
-          b(class="text-emerald-500 user-select-none") USDT SOL&nbsp;
-          span 7wL7NdCBF9USuAAapCr1zJ7oKpkSRw7xumA6YUXW4o9N
-    .col-6
-      div(
-        class="p40px"
-      )
-        b From Russia (из России)
-        div По номеру карты
-        div
-          b(class="text-red-600 user-select-none") Альфа-Банк&nbsp;
-          span 2200 1545 9034 5772
-        div
-          b(class="text-blue-600 user-select-none") ВТБ&nbsp;
-          span 2200 2459 1048 6252
-  h3(class="flex px20px py15px").
-    Other donate channels - later. For questions&nbsp;<a href="mailto:support@smartrus.org">support@smartrus.org</a>
+  div(class="mx-auto max-w1440px w100% min-h100%")
+    h3(class="px20px py15px text-center") If you like Vue Spear Tip, you can donate for developmentin the following ways:
+    .row(class="w100%")
+      .col-6
+        div(
+          class="p40px"
+        )
+          b Crypto wallets
+          div
+            b(class="text-amber-500 user-select-none") BTC&nbsp;
+            span 1FZ11aFGQQzvm7Y7JGZYPq1UAip8eo3tZ7
+          div
+            b(class="text-emerald-500 user-select-none") USDT TRC20&nbsp;
+            span TBQGoQwuoeK5xX4S6dSozGiU6UBsJwZpTV
+          div
+            b(class="text-emerald-500 user-select-none") USDT ERC20&nbsp;
+            span 0x67AE41dBe771380784194Aac6661b70eA42D34A6
+          div
+            b(class="text-emerald-500 user-select-none") USDT TON&nbsp;
+            span UQBCvVree-8XUzHXUOq9HpROAbwC_26GPOgwAJJXYlgNCj2L
+          div
+            b(class="text-emerald-500 user-select-none") USDT SOL&nbsp;
+            span 7wL7NdCBF9USuAAapCr1zJ7oKpkSRw7xumA6YUXW4o9N
+      .col-6
+        div(
+          class="p40px"
+        )
+          b From Russia (из России)
+          div По номеру карты
+          div
+            b(class="text-red-600 user-select-none") Альфа-Банк&nbsp;
+            span 2200 1545 9034 5772
+          //div
+          //  b(class="text-blue-600 user-select-none") ВТБ&nbsp;
+          //  span 2200 2459 1048 6252
+    h3(class="px20px py15px text-center").
+      Other donate channels - later. For questions&nbsp;<a href="mailto:support@smartrus.org">support@smartrus.org</a>
 </template>
 
 

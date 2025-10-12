@@ -252,7 +252,7 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
 <style lang="sass">
 .tagify
   outline: 2px solid transparent !important
-  @apply min-w220px! min-h44px! flex! items-center justify-center rounded-3xl
+  @apply min-h44px! flex! items-center justify-center rounded-3xl
   --tags-border-color: #c1c7cf !important
   --tag-hide-transition: .1ms !important
   transition: 100ms !important
@@ -263,7 +263,7 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
   padding: 0 0 0 10px !important
 
 .tagify__input
-  @apply min-w120px! fs-0.9rem
+  @apply min-w80px! fs-0.9rem
   transition: 100ms !important
   padding: .3em .5em !important
   //font-size: 13px

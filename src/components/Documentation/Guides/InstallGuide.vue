@@ -1,82 +1,119 @@
 <template lang="pug">
-  div(class="flex px20px py15px") Kit Intro
+  div(class="mx-auto max-w1024px w100% min-h100% flex")
+    div(class="flex px20px py15px w220px min-h100%!")
+      GuidesMenu
+    div(class="w[calc(100%-260px)]")
+      h1 Install
+      h4 Installing from package manager
+      div
+        p.
+          The latest version of the package has been published in the global npm repository and has been assembled at
+          <a
+            href="https://www.npmjs.com/package/vue-spear-tip" target="_blacnk"
+          >https://www.npmjs.com/package/vue-spear-tip</a>.
+        p.
+          As a package manager and application builder, we highly recommend using
+          <a
+            href="https://bun.com/docs/installation" target="_blacnk"
+          >Bun.JS <img src="../../../resources/images/bun.js.svg" class="h40px"></a>
+
+        div
+          CodeHighlight(
+            lang="pug"
+            class="h35px mb35px"
+            :code=`[
+              {
+                copy: true,
+                lang: 'bash',
+                title: 'Linux/MacOS',
+                code: "curl -fsSL https://bun.com/install | bash # for macOS, Linux, and WSL'm"
+              },
+              {
+                copy: true,
+                lang: 'bash',
+                title: 'Windows 10+ PowerShell',
+                code: 'powershell -c "irm bun.sh/install.ps1|iex"'
+              }
+            ]`
+          )
+        //CodeHighlight(
+        //  lang="bash"
+        //  class="h35px"
+        //  code=`curl -fsSL https://bun.com/install | bash # for macOS, Linux, and WSL`
+        //)
+        p.
+          Because it is currently the fastest way to install packages and build applications in JavaScript.
+          Support all popular platforms
+        p.
+          Or you can take a more common approach and install
+          <a
+            href="https://nodejs.org/en/download" target="_blacnk"
+          >Node.JS</a>.
+          Once you have it installed, you will have a
+          global <a
+            href="https://www.npmjs.com/" target="_blacnk"
+          ><b>npm</b></a> package manager that you can use to install <a
+            href="https://www.npmjs.com/package/vue-spear-tip" target="_blacnk"
+          ><b>Vue Spear Tip</b></a>.
+
+        p Next step - run in console in root project folder:
+        div
+          CodeHighlight(
+            lang="pug"
+            class="h35px mb40px"
+            :code=`[
+              {
+                copy: true,
+                lang: 'bash',
+                title: 'Bun.JS',
+                code: "bun add vue-spear-tip"
+              },
+              {
+                copy: true,
+                lang: 'bash',
+                title: 'npm',
+                code: 'npm i vue-spear-tip'
+              }
+            ]`
+          )
+
+        p.
+          This is quite enough for using ready-made components. However, if you want to create your own components
+          in an OOP (object-oriented programming) style, you will need to make some adjustments to your project.
+
+        p.
+          First, you need to set up app builder. We use <a
+            href="https://vite.dev/guide/" target="_blacnk"
+          >Vite</a> for this.
+          Follow the installation instructions for <router-link
+            to="/guides/config/vite"
+          ><b>configuring Vite</b></router-link> and follow the steps outlined in the instructions.
+
+
+        //  This is quite enough for using ready-made components. However, if you want to create your own components
+        //  in an OOP (object-oriented programming) style, you will need to make some adjustments to your project.
+        //
+        //p Install VST. Указать, что для использования уже готовых компонентов внутри приложения этого достаточно.
+        //
+        //p Install Typescript
+        //p Install Vue https://nodejs.org/en/download
+
 </template>
 
 
 <script lang="ts">
 import {VST, Prop, BaseComponent} from '../../../core'
+import GuidesMenu from '../GuidesMenu.vue'
 
 /**
- * Example
+ * InstallGuide
  * @author CHORNY
  * @copyright https://smartrus.org
  */
 @VST export default class InstallGuide extends BaseComponent {
-  @Prop(String) readonly text: string = ''
-  selectOnce: number|null = 2
-  selectOnceItems: any[] = [{key:1, value: 'Test'}, {key:2, value: 'Second value'}, ]
-  selectMulti: number[]|null = [2,1]
-  selectMultiItems: any[] = [{key:1, value: 'Test'}, {key:2, value: 'Second value'}, {key:3, value: 'Third'}]
-  selectTags: {value:string, key?:string|number}[]|null = [{key:4, value: 'Fourth'}]
-  beforeMount() {
-    // setTimeout(() => this.selectOnce = 3, 2000)
-    // setTimeout(() => this.selectMulti = [1,3], 1000)
-    // setTimeout(() => this.selectOnceItems.push({ "key": 3, "value": "S3" }), 1000)
-    // setTimeout(() => this.selectTags = [ { "key": 2, "value": "Second value" }], 3000)
-  }
-  menu = [
-    { name: 'About', url: '/' },
-    // { name: 'Examples', url: '#' },
-    { name: 'Documentation', url: '/documentation' },
-    { name: 'Library', url: '#' },
-    { name: 'Donate', url: '#' },
-  ]
-  sections = [
-    {
-      title: 'Начало работы',
-      links: [
-        { name: 'Установка', url: '#', active: true },
-        { name: 'Быстрый старт', url: '#' },
-        { name: 'Миграция с Vue 2', url: '#' }
-      ]
-    },
-    {
-      title: 'Основы',
-      links: [
-        { name: 'Создание компонента', url: '#' },
-        { name: 'Жизненный цикл', url: '#' },
-        { name: 'Пропсы и данные', url: '#' }
-      ]
-    }
-  ]
-  cards = [
-    {
-      title: 'Быстрый старт',
-      description: 'Узнайте, как быстро подключить и начать использовать библиотеку в вашем проекте.'
-    },
-    {
-      title: 'Миграция с Vue 2',
-      description: 'Пошаговое руководство по переходу с классического подхода на современный.'
-    },
-    {
-      title: 'API Reference',
-      description: 'Полное описание всех методов, свойств и возможностей библиотеки.'
-    },
-    {
-      title: 'Лучшие практики',
-      description: 'Рекомендации по эффективному использованию библиотеки в реальных проектах.'
-    }
-  ]
+  components = {GuidesMenu}
 }
 </script>
-
-<style lang="sass">
-body, html
-  @apply p0 m0 box-sizing-border-box
-  font-family: "Nunito Sans", sans-serif
-a
-  @apply decoration-none! hover:decoration-underline!
-</style>
 
 <style lang="sass" scoped>
 //span

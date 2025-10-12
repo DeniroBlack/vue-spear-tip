@@ -1,19 +1,35 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
 // import Home from '../views/Home.vue'
 import About from './About.vue'
-import Documentation from './Documentation.vue'
+import Guide from './Guide.vue'
 import Donate from './Donate.vue'
 
-const routes = [
+import guidesRoutes from './Guides/guides.routes'
+import kitRoutes from './Kit/kit.routes'
+
+for (const guide of guidesRoutes) {
+  guide.path = `/guides${guide.path}`
+}
+for (const kit of kitRoutes) {
+  kit.path = `/kit${kit.path}`
+}
+const GuidesRoutes = guidesRoutes
+const KitRoutes = kitRoutes
+export  {
+  GuidesRoutes,
+  KitRoutes
+}
+
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'Home',
+    name: 'Vue Spear Tip',
     component: About
   },
   {
-    path: '/documentation',
-    name: 'Documentation',
-    component: Documentation
+    path: '/guide',
+    name: 'Guide',
+    component: Guide
   },
   {
     path: '/donate',
@@ -22,9 +38,10 @@ const routes = [
   }
 ]
 
+console.log([...routes, ...guidesRoutes, ...kitRoutes])
+
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes: [...routes, ...guidesRoutes, ...kitRoutes] as any
 })
-
 export default router

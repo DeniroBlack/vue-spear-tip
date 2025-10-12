@@ -4,7 +4,7 @@
     :data-theme="dataThemeInner"
     :data-offset="dataOffset"
     :data-placement="dataPlacement"
-    class="d-inline-block relative min-h40px"
+    class="d-inline-block relative min-h40px whitespace-nowrap"
     v-if="showButton"
   )
     //- @mousedown="e => ((isButtonActive = true) && mousedown(e))"

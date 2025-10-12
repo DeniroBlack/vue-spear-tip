@@ -4,6 +4,10 @@ import DocsWithExamples from './components/DocsWithExamples.vue'
 import router from './components/Documentation/router'
 import './kit/styles/grid.sass'
 
+router.afterEach((to, from) => {
+  $VST.$emit('RouterPageMount', {to, from})
+})
+
 const app = createApp(DocsWithExamples)
 
 for(let n in LazyComponents) { // @ts-ignore

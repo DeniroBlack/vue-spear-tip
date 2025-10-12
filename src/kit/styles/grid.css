@@ -8,7 +8,7 @@
     grid-template-columns: repeat(12, 1fr);
     align-content: start;
     grid-auto-rows: auto;
-    align-items: start;
+    align-items: stretch;
 }
 .row .col-1,
 .row .col-2,
@@ -24,8 +24,7 @@
 .row .col-12 {
     position: relative;
     grid-column: span 1;
-    align-self: start;
-    flex: 1;
+    align-self: stretch;
     display: flex;
     flex-direction: column;
 }

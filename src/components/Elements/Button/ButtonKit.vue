@@ -3,21 +3,22 @@
     div(class="flex px20px py15px w220px min-h100%!")
       GuidesMenu
     div(class="w[calc(100%-260px)]")
-      h1 Laravel Config Guide
-      div soon
+      h1 ButtonKitElement
+      div(class="flex")
+        Button ButtonKitElement
 </template>
 
 
 <script lang="ts">
 import {VST, Prop, BaseComponent} from '../../../core'
-import GuidesMenu from '../GuidesMenu.vue'
+import GuidesMenu from '../../../components/Documentation/GuidesMenu.vue'
 
 /**
- * LaravelConfigGuide
+ * Button documentation with examples
  * @author CHORNY
  * @copyright https://smartrus.org
  */
-@VST export default class LaravelConfigGuide extends BaseComponent {
+@VST export default class ButtonKit extends BaseComponent {
   components = {GuidesMenu}
 }
 </script>
