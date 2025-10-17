@@ -1,4 +1,5 @@
 import {VNode} from '@vue/runtime-core'
+import {VueClass} from '../core'
 
 /**
  * Наследуемый интерфейс компонента vue
@@ -8,6 +9,7 @@ import {VNode} from '@vue/runtime-core'
 export default interface IVueClass {
   readonly mixins: Array<any>
   readonly components: {[key:string|symbol|number]:any}
+  readonly componentsParent: {[key:string|symbol|number]:any}
   readonly emits: Array<string>
   readonly emitsParent: Array<string>
   readonly inject: Array<string>
@@ -115,7 +117,7 @@ export default interface IVueClass {
    */
   readonly $refs: {
     [key:string]:HTMLElement|HTMLInputElement|undefined|
-    HTMLElement[]|HTMLInputElement[]
+    HTMLElement[]|HTMLInputElement[]|IVueClass|typeof VueClass|VueClass
   }
   
   /**

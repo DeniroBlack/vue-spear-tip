@@ -4,6 +4,8 @@ import QRCodeKitElement from './Elements/QRCodeKitElement.vue'
 import BarcodeKitElement from './Elements/BarcodeKitElement.vue'
 import SelectKitField from './Fields/SelectKitField.vue'
 import DateKitField from './Fields/DateKitField.vue'
+import StringKitField from './Fields/StringKitField.vue'
+import TabsKit from '../../Elements/Tabs/TabsKit.vue'
 
 export default [
   {
@@ -33,6 +35,11 @@ export default [
     name: 'Button',
     component: ButtonKitElement
   },
+  // {
+  //   path: '/elements/tabs',
+  //   name: 'Tabs',
+  //   component: TabsKit
+  // },
   {
     path: '/elements/qr',
     name: 'QR Code',
@@ -57,7 +64,7 @@ export default [
   {
     path: '/fields/string',
     name: 'String',
-    component: ButtonKitElement
+    component: StringKitField
   },
   {
     path: '/fields/select',
@@ -86,6 +93,9 @@ export default [
   },
   {
     name: '<b style="color: #ccc;">Soon</b>',
+  },
+  {
+    name: '<b style="color: #ccc;">DT (datetime)</b>',
   },
   {
     name: '<b style="color: #ccc;">Toasts (Soon)</b>',

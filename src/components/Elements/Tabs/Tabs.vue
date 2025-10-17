@@ -1,0 +1,97 @@
+<template lang="pug">
+  .tabs
+    .tabs__headers
+      .tabs__header(
+        v-for="(tab, index) in $slots"
+        :key="index"
+        :class="{ 'tabs__header--active': currentTab === index }"
+        @click="setCurrentTab(index)"
+      ) {{ tab().toString()  }}
+    .tabs__content
+      //slot(:name="currentTabName")
+      //slot(v-if="showDefaultSlot")
+</template>
+
+
+<script lang="ts">
+import {BaseComponent, Computed, Prop, VST, Watch} from '../../../core'
+
+interface TabSlot {
+  props?: {
+    title?: string;
+  };
+}
+
+/**
+ * Кнопка (наследуемая)
+ * @author CHORNY (created 02.03.2024 4:32)
+ * @copyright https://smartrus.org
+ */
+@VST export default class Tabs extends BaseComponent {
+
+  currentTab = 0
+  CommentT: typeof Comment = Comment
+  mounted() {
+    // console.log('Tabs', this.tabSlots)
+    // super.mounted()
+  }
+
+  // declare tabSlots: TabSlot[]; @Computed('tabSlots') _tabSlotsComputed(): TabSlot[] {
+  //   const slots = this.$slots
+  //   return (slots?.filter(node =>
+  //       node.type === Comment &&
+  //       node.props?.title
+  //   ) || []) as TabSlot[]
+  // }
+
+  // get currentTabName(): string {
+  //   return `tab-${this.currentTab}`
+  // }
+  //
+  // get showDefaultSlot(): boolean {
+  //   return this.currentTab === 0 && this.tabSlots.length === 0
+  // }
+
+  setCurrentTab(index: number): void {
+    this.currentTab = index;
+  }
+
+  getTabTitle(tab: TabSlot): string {
+    return tab.props?.title || 'Без названия'
+  }
+}
+</script>
+
+<style scoped lang="sass">
+.tabs
+  width: 100%
+
+  &__headers
+    display: flex
+    border-bottom: 1px solid #e0e0e0
+    margin-bottom: 1rem
+    background-color: #fafafa
+
+  &__header
+    padding: 0.75rem 1.5rem
+    cursor: pointer
+    border-bottom: 2px solid transparent
+    transition: all 0.3s ease
+    user-select: none
+
+    &:hover
+      background-color: #f0f0f0
+
+    &--active
+      border-bottom-color: #42b883
+      color: #42b883
+      font-weight: 600
+      background-color: white
+
+  &__content
+    padding: 1rem
+    min-height: 200px
+    border: 1px solid #e0e0e0
+    border-radius: 4px
+    background-color: white
+</style>

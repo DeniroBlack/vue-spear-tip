@@ -57,7 +57,7 @@ import PageAbstract from './Documentation/PageAbstract.vue'
     { name: 'Donate', url: '/donate' },
   ]
   routedPageMount(data?: {from: any, to: any}) {
-    console.log(data)
+    // console.log(data)
   }
 }
 </script>

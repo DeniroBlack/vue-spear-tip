@@ -16,7 +16,7 @@
         <router-link to="/guides/config/typescript" class="fw-bold">TypeScript</router-link>
         and understand how preprocessors such as Scss/Stylus or Sass work.
         It would be helpful if you understood how
-        <router-link to="/guides/config/uno-tailwind" class="fw-bold">UnoСss or TainwindCss</router-link>
+        <router-link to="/guides/config/unocss" class="fw-bold">UnoСss or TainwindCss</router-link>
         work.
 
       //p Пример с созданием простого компонента, можно с подключением кнопки, но показать красоту unocss посредством обёртки

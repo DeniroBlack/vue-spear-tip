@@ -38,7 +38,7 @@ const routes: RouteRecordRaw[] = [
   }
 ]
 
-console.log([...routes, ...guidesRoutes, ...kitRoutes])
+// console.log([...routes, ...guidesRoutes, ...kitRoutes])
 
 const router = createRouter({
   history: createWebHistory(),

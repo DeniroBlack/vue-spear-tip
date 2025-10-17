@@ -35,36 +35,35 @@ export const Prop = (
   ...types: (VuePropsTypes)[]
 ): any => {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-    // @ts-ignore
-    if(!globalThis.$VST._vueClassInstances[target.constructor.name]) {
-      // @ts-ignore
-      globalThis.$VST._vueClassInstances[target.constructor.name] = new target.constructor
-      // @ts-ignore
-      globalThis.$VST._vueClassInstances[target.constructor.name].name =
-          // @ts-ignore
-          globalThis.$VST._vueClassInstances[target.constructor.name]?.constructor?.name?.toString()
-          // @ts-ignore
-          ?? globalThis.$VST._vueClassInstances[target.constructor.name]['name']
-          ??  ''
+    if(!globalThis.$VST._dynamic._vueClassInstances[target.constructor.name]) {
+      globalThis.$VST._dynamic._vueClassInstances[target.constructor.name] = new target.constructor
+      globalThis.$VST._dynamic._vueClassInstances[target.constructor.name].name =
+        globalThis.$VST._dynamic._vueClassInstances[target.constructor.name]?.constructor?.name?.toString()
+        ?? globalThis.$VST._dynamic._vueClassInstances[target.constructor.name]['name']
+        ??  ''
     }
 
-    let TypeObj = typeof propDataOrType == 'object' ? propDataOrType : {
+    let TypeObj: any = typeof propDataOrType == 'object' ? propDataOrType : {...{
       type: [propDataOrType, ...types]
-    }
-    // @ts-ignore
-    if(globalThis.$VST._vueClassInstances[target.constructor.name][propertyKey]) {
-      // @ts-ignore
-      TypeObj.default = globalThis.$VST._vueClassInstances[target.constructor.name][propertyKey]
+    }}
+    if(globalThis.$VST._dynamic._vueClassInstances[target.constructor.name][propertyKey]) {
+      TypeObj.default = globalThis.$VST._dynamic._vueClassInstances[target.constructor.name][propertyKey]
     }
 
-    // @ts-ignore
-    if(!globalThis.$VST._vueClassProps[target.constructor.name]) {
-      // @ts-ignore
-      globalThis.$VST._vueClassProps[target.constructor.name] = {}
+    if(!globalThis.$VST._dynamic._vueClassProps[target.constructor.name]) {
+      globalThis.$VST._dynamic._vueClassProps[target.constructor.name] = {}
     }
-
-    // @ts-ignore
-    globalThis.$VST._vueClassProps[target.constructor.name][propertyKey] = TypeObj
-    // console.log(globalThis.$VST._vueClassInstances[target.constructor.name], target.constructor.name, globalThis.$VST._vueClassProps[target.constructor.name])
+    
+    // todo проверить, почему не заменяется дочерний Prop на родительский
+    // if (['DateField', 'FieldComponent'].includes(target.constructor.name) && propertyKey == 'placeholder') {
+    //   console.log(
+    //     target.constructor.name,
+    //     TypeObj,
+    //     propertyKey,
+    //     TypeObj.default,
+    //     globalThis.$VST._dynamic._vueClassInstances[target.constructor.name][propertyKey]
+    //   )
+    // }
+    globalThis.$VST._dynamic._vueClassProps[target.constructor.name][propertyKey] = TypeObj
   }
 }

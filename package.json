@@ -1,6 +1,6 @@
 {
   "name": "vue-spear-tip",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "scripts": {
     "build": "vite build --mode examples-build",
@@ -29,6 +29,7 @@
   ],
   "dependencies": {
     "@bunchtogether/vite-plugin-flow": "^1.0.2",
+    "@heroicons/vue": "^2.2.0",
     "@rollup/plugin-typescript": "^12.1.4",
     "@vitejs/plugin-vue": "^6.0.1",
     "flatpickr": "^4.6.13",
@@ -36,6 +37,7 @@
     "pug": "^3.0.3",
     "sass-embedded": "^1.93.2",
     "temporal-polyfill": "^0.3.0",
+    "tippy.js": "^6.3.7",
     "typescript": "^5.9.3",
     "unocss": "^66.5.3",
     "unocss-preset-scalpel": "^1.2.7",
@@ -43,6 +45,7 @@
     "vite-plugin-pug": "^0.4.1",
     "vue": "^3.5.22",
     "vue-highlight-code": "^0.2.0",
+    "vue-imask": "^7.6.1",
     "vue-router": "^4.5.1"
   },
   "license": "MIT",

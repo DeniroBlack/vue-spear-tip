@@ -1,6 +1,6 @@
 import {defineComponent, getCurrentInstance, nextTick} from 'vue' // @ts-ignore
 import VueClass from "./VueClass.ts"
-import IGlobalComponent from '../Interfaces/IGlobalComponent'
+import {VSTType} from './index'
 
 /**
  * Параметры readonly из экземпляра vue
@@ -18,24 +18,27 @@ type VueProps = {
 
 // Объявляем типы для глобального хранилища
 declare global {
-  var $VST: IGlobalComponent
+  var $VST: VSTType
 }
 
 // Инициализация глобальных объектов, если они не существуют
 if (typeof globalThis.$VST === 'undefined') {
   globalThis.$VST = {} as any
 }
-if (typeof globalThis.$VST._vueClassInstances === 'undefined') {
-  globalThis.$VST._vueClassInstances = {}
+if (typeof globalThis.$VST._dynamic === 'undefined') {
+  globalThis.$VST._dynamic = {} as any
 }
-if (typeof globalThis.$VST._vueClassProps === 'undefined') {
-  globalThis.$VST._vueClassProps = {}
+if (typeof globalThis.$VST._dynamic._vueClassInstances === 'undefined') {
+  globalThis.$VST._dynamic._vueClassInstances = {}
 }
-if (typeof globalThis.$VST._vueClassWatchers === 'undefined') {
-  globalThis.$VST._vueClassWatchers = {}
+if (typeof globalThis.$VST._dynamic._vueClassProps === 'undefined') {
+  globalThis.$VST._dynamic._vueClassProps = {}
 }
-if (typeof globalThis.$VST._vueComputed === 'undefined') {
-  globalThis.$VST._vueComputed = {}
+if (typeof globalThis.$VST._dynamic._vueClassWatchers === 'undefined') {
+  globalThis.$VST._dynamic._vueClassWatchers = {}
+}
+if (typeof globalThis.$VST._dynamic._vueComputed === 'undefined') {
+  globalThis.$VST._dynamic._vueComputed = {}
 }
 
 /**
@@ -75,7 +78,7 @@ function createComponent<T extends { new(...args: any[]): {} }>(
   options: any = {}
 ): T & VueClass {
   // Создаем инстанс класса или получаем существующий
-  let vueClassInstance = globalThis.$VST?._vueClassInstances[constructor.name] ?? new constructor()
+  let vueClassInstance = globalThis.$VST._dynamic?._vueClassInstances[constructor.name] ?? new constructor()
 
   // Проверка наследования от VueClass
   if (!(vueClassInstance instanceof VueClass)) {
@@ -83,8 +86,8 @@ function createComponent<T extends { new(...args: any[]): {} }>(
   }
 
   // Сохраняем инстанс, если его еще нет
-  if (!globalThis.$VST?._vueClassInstances[constructor.name]) {
-    globalThis.$VST._vueClassInstances[constructor.name] = vueClassInstance
+  if (!globalThis.$VST._dynamic?._vueClassInstances[constructor.name]) {
+    globalThis.$VST._dynamic._vueClassInstances[constructor.name] = vueClassInstance
   }
 
   // Получаем методы
@@ -96,11 +99,11 @@ function createComponent<T extends { new(...args: any[]): {} }>(
 
   // Обработка props
   const dataProps = {}
-  let props = Object.assign({}, (globalThis.$VST._vueClassProps[constructor.name] ?? {}))
+  let props = Object.assign({}, (globalThis.$VST._dynamic._vueClassProps[constructor.name] ?? {}))
   let pProps = Object.getPrototypeOf(vueClassInstance)
 
   do {
-    props = Object.assign(props, (globalThis.$VST._vueClassProps[pProps.constructor.name] ?? {}))
+    props = Object.assign(props, (globalThis.$VST._dynamic._vueClassProps[pProps.constructor.name] ?? {}))
   } while ((pProps = Object.getPrototypeOf(pProps)) instanceof VueClass)
 
   // Обработка свойств объекта
@@ -111,15 +114,15 @@ function createComponent<T extends { new(...args: any[]): {} }>(
   }
 
   // Обработка watchers
-  let watch = Object.assign({}, (globalThis.$VST._vueClassWatchers[constructor.name] ?? {}))
+  let watch = Object.assign({}, (globalThis.$VST._dynamic._vueClassWatchers[constructor.name] ?? {}))
   let pWatch = Object.getPrototypeOf(vueClassInstance)
 
   do {
-    watch = Object.assign(watch, (globalThis.$VST._vueClassWatchers[pWatch.constructor.name] ?? {}))
+    watch = Object.assign(watch, (globalThis.$VST._dynamic._vueClassWatchers[pWatch.constructor.name] ?? {}))
   } while ((pWatch = Object.getPrototypeOf(pWatch)) instanceof VueClass)
 
   // Обработка computed свойств
-  let computed = Object.assign({}, (globalThis.$VST._vueComputed[constructor.name] ?? {}))
+  let computed = Object.assign({}, (globalThis.$VST._dynamic._vueComputed[constructor.name] ?? {}))
   for (let name in computed) { // @ts-ignore
     delete vueClassInstance[name]
   }
@@ -133,7 +136,7 @@ function createComponent<T extends { new(...args: any[]): {} }>(
     computed,
     name: vueClassInstance['name'] ?? vueClassInstance['instance']?.constructor?.name,
     mixins: vueClassInstance.mixins,
-    components: vueClassInstance.components,
+    components: {...(vueClassInstance.componentsParent ?? {}), ...vueClassInstance.components},
     emits: vueClassInstance.emits.concat(vueClassInstance.emitsParent),
     inject: vueClassInstance.inject.concat(vueClassInstance.injectParent),
     provide: {...vueClassInstance.provideParent, ...vueClassInstance.provide},

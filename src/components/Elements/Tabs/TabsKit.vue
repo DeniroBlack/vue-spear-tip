@@ -3,16 +3,11 @@
     div(class="flex px20px py15px w220px min-h100%!")
       GuidesMenu
     div(class="w[calc(100%-260px)]")
-      h1 StringKit
-      div
-        StringField(
-          placeholder="Simple string field"
-        )
-        StringField(
-          placeholder="Simple string field"
-          maskPreset="phone"
-          :alwaysCopyIcon="true"
-        )
+      h1 TabsKit
+      div(class="flex")
+        Tabs
+          slot 1
+          template(#tab title="asdasd") 2
 </template>
 
 
@@ -21,11 +16,11 @@ import {VST, Prop, BaseComponent} from '../../../core'
 import GuidesMenu from '../../../components/Documentation/GuidesMenu.vue'
 
 /**
- * StringKit
+ * Button documentation with examples
  * @author CHORNY
  * @copyright https://smartrus.org
  */
-@VST export default class StringKit extends BaseComponent {
+@VST export default class TabsKit extends BaseComponent {
   components = {GuidesMenu}
 }
 </script>

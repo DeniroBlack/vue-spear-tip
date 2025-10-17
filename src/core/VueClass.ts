@@ -4,6 +4,7 @@ import IVueClass from '../Interfaces/IVueClass'
 export default abstract class VueClass implements IVueClass {
   public readonly mixins: Array<any> = []
   public readonly components: {[key:string|symbol|number]:any} = {}
+  public readonly componentsParent: {[key:string|symbol|number]:any} = {}
   public readonly emits: Array<string> = []
   public readonly emitsParent: Array<string> = []
   public readonly inject: Array<string> = []
@@ -23,7 +24,7 @@ export default abstract class VueClass implements IVueClass {
   declare readonly $parent: VueClass|null
   declare readonly $props: Object
   declare readonly $refs: {
-    [key:string]: HTMLElement|HTMLInputElement|HTMLElement[]|HTMLInputElement[]
+    [key:string]: HTMLElement|HTMLInputElement|HTMLElement[]|HTMLInputElement[]|IVueClass
   }
   readonly $root: {
     // [key:string]:any

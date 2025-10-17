@@ -1,10 +1,11 @@
 <template lang="pug">
-  DateKit
+  StringKit
 </template>
 
 <script lang="ts">
 import {VST, Prop, BaseComponent} from '../../../../core'
 import StringKit from '../../../Fields/StringField/StringKit.vue'
+import GuidesMenu from '../../../../components/Documentation/GuidesMenu.vue'
 
 /**
  * StringKitField
@@ -12,7 +13,7 @@ import StringKit from '../../../Fields/StringField/StringKit.vue'
  * @copyright https://smartrus.org
  */
 @VST export default class StringKitField extends BaseComponent {
-  components = {StringKit}
+  components = {GuidesMenu, StringKit}
 }
 </script>
 

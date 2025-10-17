@@ -1,68 +1,130 @@
-<template v-once lang="pug">
+<template lang="pug">
   .vst-date-field(
-    class="d-inline-block my1px w100%"
+    class="d-inline-block my1px w100% flex items-center flex-col relative"
     :class=`{
       // 'vst-select-multi': mode == 'multi' || mode == 'tags',
     }`
   )
+    //div {{ VST.$r }}
     //@click="!$root.APP.hasTouchpad ? addDate() : null"
     //@touchstart="$root.APP.hasTouchpad ? addDate() : null"
     div(
-      tabindex="5"
+      tabindex="-1"
       v-if="!value"
-      @focusin="addDate()"
-      @click="addDate()"
-      class=`h28px flex items-center min-w240px bg-white rounded-3xl justify-center cursor-pointer text-#c1c7cf italic
-          border-solid border-#c1c7cf border-1px hover:border-gray-300 hover:border-#d6ff63! hover:text-lime-500
-          mx-auto min-h42px!`
-    ) {{ placeholder }}
-    div(v-show="value")
+      @focusin="!disabled ? addDate() : null"
+      @click="!disabled ? addDate() : null"
+      class=`flex items-center min-w240px bg-white rounded-3xl justify-center text-#c1c7cf
+          border-solid border-1px w100%
+          mx-auto min-h46px!`
+      :class=`{
+        'hover:border-stone hover:text-stone border-#c1c7cf' : !disabled,
+        'border-#D0CCC9FF cursor-no-drop' : disabled,
+      }`
+    ) {{ disabled ? '----' : (placeholder?.[localeInner] || placeholder?.en || placeholder) }}
+    VSTStringField(
+      v-if="value"
+      :maskPreset
+      :placeholder="(placeholder?.[localeInner] || placeholder?.en || placeholder)"
+      class=`z2`
+      @focus="_inputFocus()"
+      @change="v => _changeInput(v)"
+      @dateMaskChange="_dateMaskChange"
+      :force12hours
+      :dtPresetLocale="locale"
+      :disabled
+      @keypress.enter="_inputEnter()"
+      ref="VSTStringField"
+    )
+    div(class="cursor-pointer absolute op-0 l-50% translate-x--50%" v-show="value" )
       input(
         ref="picker"
         type="text"
         readonly
         @mousedown.prevent
       )
+    div(
+      class="w20px h20px text-stone absolute t-13px l-12px z4 cursor-pointer hover:scale-130"
+      v-if="!disabled"
+    )
+      CalendarDaysIcon(
+        @click="value ? _inputFocus() : addDate()"
+      )
+    component(is="style" v-if="!showCalendar") .flatpickr-calendar {display: none !important}
+    //div {{ value }}
 </template>
 
 
 <script lang="ts">
 
-import {Computed, Prop, VST, Watch} from '../../../core'
+import {Temporal} from 'temporal-spec'
+import {Computed, Prop, VST, VueClass, Watch} from '../../../core'
 import FieldComponent from '../../../replaceable/FieldComponent.vue'
-import {Russian} from 'flatpickr/dist/l10n/ru'
-// https://flatpickr.js.org/examples/
+import FPLocales from 'flatpickr/dist/l10n'
 import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
-import {FlatpickrFn, Instance } from 'flatpickr/dist/types/instance'
+import { FlatpickrFn } from 'flatpickr/dist/types/instance' // @ts-ignore
+import { Instance } from 'flatpickr/dist/types/instance'
 import 'flatpickr/dist/plugins/confirmDate/confirmDate.css'
 import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js'
+import {StringField as VSTStringField} from '../../../kit'
+import IDateField from './IDateField'
+import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
 
 /**
- * Пример компонента
+ * Поле даты/даты-время с календарём и маской автоматически подстраивающеюся под локаль
  * @author CHORNY
  * @copyright https://smartrus.org
  */
-// if not extendable
-@VST export default class DateField extends FieldComponent {
+@VST export default class DateField extends FieldComponent implements IDateField {
+  components = {VSTStringField, CalendarDaysIcon}
+  emits = ['change']
   declare $refs: {
     picker: HTMLElement
+    VSTStringField: any
   }
+  @Prop(String, Object) readonly placeholder: string|{[k:string]:string} = {
+    en: 'Select date',
+    ru: 'Нажмите для выбора даты',
+  }
+  @Prop(Boolean) readonly force12hours: boolean = false
   /** Добавить время */
-  @Prop(Boolean) withTime: boolean = true
+  @Prop(Boolean) readonly withTime: boolean = false
   /** Добавить секунды */
-  @Prop(Boolean) withSeconds: boolean = true
+  @Prop(Boolean) readonly withSeconds: boolean = false
   /**
    * value будет не строкой, а Temporal.ZonedDateTime
-   * @see {Temporal.ZonedDateTime}
+   * @see Temporal.ZonedDateTime
    */
-  @Prop(Boolean) asTemporal: boolean = false
-  emits = ['click']
-  // value: Temporal.ZonedDateTime|null|string = null
+  @Prop(String) readonly locale: string = ''
+  @Prop(Boolean) readonly disabled: boolean = false
+  @Prop(Boolean) readonly ISO861UTCMode: boolean = false
+  value: number|string|null = null
   maxDateInner: string = ''
   minDateInner: string = ''
+  localeInner: string = 'en'
+  maskPreset: 'date'|'datetime'|'datetimeSec' = 'date'
+  showCalendar: boolean = true
+  DT: Temporal.ZonedDateTime|null = null
+  beforeMount() {
+    if (this.withTime) {
+      this.maskPreset = 'datetime'
+      if (this.withSeconds) {
+        this.maskPreset = 'datetimeSec'
+      }
+    }
+    this._initTemporalUpdateOut = true
+    this.value = this.modelValue || this.inputValue || null
+  }
+
   mounted() {
-    this.nextTick(() => this.initPicker())
+    this.nextTick(() => {
+      this._initPicker()
+      this.nextTick(() => {
+        if (this.value) {
+          this.addDate()
+        }
+      })
+    })
   }
   /** Библиотека по работе  */
   private fp: Instance|null = null
@@ -70,35 +132,59 @@ import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js
 
   addDate() {
     const zonedDate = $VST.DT()
+    const isNewVal: boolean = !!this.value
     this.$emit(
         'update:modelValue',
-        this.value =
-            this.asTemporal
-                ? zonedDate
-                : this.parseTime(zonedDate)
+        this.value = this.value || (this.ISO861UTCMode ? zonedDate?.[
+          this.maskPreset == 'date' ? 'toPlainDate' : 'toPlainDateTime'
+        ]?.()?.toString().replace('T', ' ') : zonedDate.epochMilliseconds)
     )
+    this.showCalendar = false
     setTimeout(() => {
-      if (!this.fp) this.initPicker()
-      // this.fp?.setDate(this.parseTime(zonedDate))
+      if (!this.fp) this._initPicker()
+      this.fp?.open()
+      this.fp?.close()
       this.nextTick(() => {
+        if (!this.disabled && !isNewVal) this.$refs.VSTStringField?.focus?.()
         if (this.$refs?.picker) {
-          this.$refs?.picker?.click()
           setTimeout(() => {
+            this.showCalendar = true
             this.$refs.picker.setAttribute('value', this._formatDate(new Date(zonedDate.epochMilliseconds)))
-            this.fp?.open()
-          }, 70)
+            this.fp?.setDate(new Date($VST.DT(this.value).epochMilliseconds))
+            if (!isNewVal) {
+              this.fp?.open()
+            }
+          }, 250)
         }
       })
-
-    }, 70)
+    }, 100)
   }
 
-  private initPicker() {
-    if (!this.$refs.picker) return
+  private _extractDateOnly(dateString:string): string|null {
+    const regex = /(\d{2,4}[./_-]\d{2,4}[./_-]\d{2,4})/
+    const match = dateString.match(regex)
+    if (match) return match?.[0] ?? null
+    return null
+  }
+
+  private _preventMaskDateChange = false
+  private _initPicker() {
+    const locale = ((this.force12hours ? 'en-US'  : this.locale) || new Intl.DateTimeFormat().resolvedOptions()?.locale)
+    const localeShort = locale?.split?.('-')?.[0]
+    if (!this.$refs.picker || !localeShort) return
+    this.localeInner = localeShort
+    let pmHours: boolean
+    try {
+      const options = new Intl.DateTimeFormat(locale, { hour: 'numeric' }).resolvedOptions()
+      pmHours = options.hourCycle === 'h11' || options.hourCycle === 'h12'
+    } catch (e) {
+      pmHours = false
+    }
     // @ts-ignore
     this.fp = (flatpickr as FlatpickrFn)(this.$refs.picker as HTMLElement, {
       // defaultDate: $E.DT(this.value!).toString?.({ timeZoneName: 'never' })?.split?.('.')?.[0],
       enableTime: this.withTime,
+      time_24hr: !pmHours,
       enableSeconds: this.withSeconds,
       weekNumbers: true,
       dateFormat: 'Y-m-d H:i:S', // Формат с секундами
@@ -107,12 +193,26 @@ import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js
       minuteIncrement: 1,
       secondsIncrement: 1,
       hoursIncrement: 1,
-      className: 'custom-flatpickr-theme',
-      locale: Russian, // @ts-ignore
-      plugins: [new confirmDatePlugin({})],
+      allowInput: 1,
+      closeOnSelect: false,
+      className: 'custom-flatpickr-theme', // @ts-ignore
+      locale: (localeShort ? FPLocales?.[localeShort] : FPLocales?.default) || FPLocales?.default || undefined, // @ts-ignore
+      plugins: this.withSeconds || this.withTime ? [new confirmDatePlugin({
+        confirmIcon: '',
+        showAlways: true,
+      })] : [],
+      onValueUpdate: (dates: any) => {
+        if (this._preventMaskDateChange) return this._preventMaskDateChange = false
+        const time = dates?.[0]?.getTime?.() ?? 0
+        if (time) {
+          this._setInputMaskValueByDTStamp(time)
+        }
+      },
       onChange: (dates: any) => {
+        // console.log('change', dates)
         // if (dates[0]) {
-        //   let zonedDate = Engine.DT(dates[0].getTime())
+        //   let zonedDate = $VST.DT(dates[0].getTime())
+        //   console.log(zonedDate)
         //   // Если включено время, но нет секунд, то сбрасываем последние до 00
         //   if (this.withTime && !this.withSeconds) {
         //     zonedDate = zonedDate.with({
@@ -130,58 +230,87 @@ import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js
         //   )
         // }
       },
-
-      // fixme сделать подстановку нескольких событий, а отображать их, например, списком над/под календарём,
-      //        хотя можно и просто списком в интерактивном tooltip
-      // Кастомизация дней
-      // onDayCreate: (dObj, dStr, fp, dayElem: HTMLElement) => {
-      //   const dateStr = this.formatDate(dayElem.dateObj)
-      //   const event = this.events.find(e => e.date === dateStr)
-      //
-      //   if (event) { // Заготовка для подстановки событий ко дню
-      //     Engine.l('dateStr', dayElem.dateObj, dateStr, event, dayElem)
-      //     dayElem.style.fontWeight = 'bolder'
-      //     dayElem.style.background = '#e3dd6b'
-      //     dayElem.title = event.title
-      //     // // Создаем элемент с событием
-      //     // const eventElement = document.createElement('span')
-      //     // eventElement.className = `event-dot event-${event.type}`
-      //     // eventElement.title = event.title
-      //     // dayElem.appendChild(eventElement)
-      //     //
-      //     // // Добавляем класс к самому дню
-      //     // dayElem.classList.add('has-event')
-      //   }
-      // },
-
-      // parseDate: (datestr, format) => {
-      //   Engine.l('datestr', datestr)
-      //   return '1'
-      //   // const date = Engine.DT(datestr) as Temporal.ZonedDateTime
-      //   // const month = date.toLocaleString('ru-RU', { month: 'short', day: 'numeric' })
-      //   //   .replace(/\d+\s?/, '')
-      //   // return `${date.day} ${month} ${date.year}`+
-      //   //   (this.withTime
-      //   //       ? ` в ${date.hour.toString().padStart(2, '0')}:${date.minute.toString().padStart(2, '0')}`
-      //   //       : ''
-      //   //   )+
-      //   //   (this.withSeconds ? `:${date.second.toString().padStart(2, '0')}` : '')
-      // },
-      // formatDate: (date: Date, format: any, locale: any) => {
-      //   return this._formatDate(date)
-      // }
     })
 
+
+    setTimeout(() => {
+      if (this.value) {
+        this._setInputMaskValueByDTStamp(this.value)
+      }
+    }, 150)
     // Установка начального значения если есть
     // if (this.value) {
     //   this.setValue(this.value)c
     // }
   }
+
+  private _inputFocus() {
+    // todo мобильной версии
+    if (this.fp && !this.fp.isOpen) {
+      this.fp.open()
+    }
+  }
+
+  private _changeInput(val: string) {
+    if (this.fp && !this.fp.isOpen && !this.value) {
+      this.fp.open()
+    }
+  }
+  private _inputEnter(val: string) {
+    if (this.fp && this.fp.isOpen) {
+      this.fp.close()
+    }
+    this.$refs?.VSTStringField?.blur?.()
+  }
+
+  /**
+   * Установка даты по вводимым данным из поля маски в
+   * @param val
+   * @private
+   */
+  private _dateMaskChange(val: {
+    month: number|string, year: number|string, day: number|string, hour: number|string,
+    minute: number|string, seconds: number|string, AmPm?: string
+  })
+  {
+    let {month, year, day, hour, minute, seconds, AmPm} = val
+    const dt = new Date
+    if (!month) month = (dt.getMonth() + 1)
+    if (!day) day = dt.getDate()
+    if ((year?.toString?.()?.length ?? 0) < 4) year = dt.getFullYear()
+    let isPm: null|boolean = null
+    if (!hour && this.maskPreset != 'date') {
+      hour = dt.getHours()
+      if (hour == 23) hour = 0
+      else ++hour
+    }
+    else {
+      if (this.$refs.VSTStringField.is12hours) {
+        hour = hour == 12 ? (
+          AmPm == 'am' ? ((hour as number)-12) : hour
+        ) : hour
+      }
+    }
+    // console.log('AmPm', AmPm)
+
+    const dtc = new Date(
+        year as number, (month as number)-1, day as number,
+        0, minute as number, seconds as number
+    )
+    dtc.setHours(hour as number)
+    if (this.fp) {
+      this.fp.setDate(dtc)
+      if (this.maskPreset == 'date') {
+        this.nextTick(() => this.fp?.close?.())
+      }
+    }
+  }
+
   private parseTime(time: any): string {
     return time.toString().split('+')[0].split('.')[0]
-        .replace('T', ' ').split(
-            this.withTime ? '!' : ' '
-        )[0]
+      .replace('T', ' ').split(
+        this.withTime ? '!' : ' '
+      )[0]
   }
 
   private _formatDate(time: Date): string {
@@ -197,15 +326,48 @@ import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js
         (this.withSeconds ? `:${date.second.toString().padStart(2, '0')}` : '')
   }
 
-  // // Watch dynamic changes to items prop
-  // @Watch('items', true) _itemsWatch(items: any) {
-  //
-  // }
-  // // Generate computed class prop
-  // declare some: boolean; @Computed('some') _valueComputed(some: boolean): DateField['some'] {
-  //   return some
-  // }
+  private _setInputMaskValueByDTStamp(stamp: number|string) {
+    this.DT = $VST.DT(stamp)
+    this.$emit(
+      'update:modelValue',
+      this.value = this.ISO861UTCMode ? this.DT?.[
+        this.maskPreset == 'date' ? 'toPlainDate' : 'toPlainDateTime'
+      ]?.()?.toString().replace('T', ' ') : this.DT.epochMilliseconds
+    )
+    let val = this.DT.toLocaleString(
+        (this.locale || new Intl.DateTimeFormat().resolvedOptions().locale), {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: this.maskPreset == 'datetime' || this.maskPreset == 'datetimeSec' ? '2-digit' : undefined,
+          minute: this.maskPreset == 'datetime' || this.maskPreset == 'datetimeSec' ? '2-digit' : undefined,
+          second: this.maskPreset == 'datetimeSec' ? '2-digit' : undefined,
+        }
+    )
+    if (this.maskPreset == 'date') {
+      val = this._extractDateOnly(val) ?? ''
+    }
+    val = val.trim().replace(/\s+/g, ' ')
+    this.$refs.VSTStringField.setValue(val)
+  }
+
+  private _initTemporalUpdateOut: boolean = false
+  onValueChange() {
+    this._initTemporalUpdateOut = true
+    this.DT = $VST.DT(this.value || undefined)
+  }
+
+  @Watch('DT', true, true) _watchDT(DT: Temporal.ZonedDateTime|null) {
+    if (this._initTemporalUpdateOut) return this._initTemporalUpdateOut = false
+    this._initTemporalUpdateOut = true
+    if (DT) this.value = this.ISO861UTCMode ? DT?.[
+      this.maskPreset == 'date' ? 'toPlainDate' : 'toPlainDateTime'
+    ]?.()?.toString().replace('T', ' ') : DT.epochMilliseconds
+    else this.value = null
+    this.$emit('update:modelValue', this.value)
+  }
 }
+
 </script>
 
 
@@ -216,12 +378,11 @@ import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js
   @apply w-full relative select-none!
 
   .flatpickr-input
-    @apply select-none! hover:text-lime-500 hover:underline hover:border-#d6ff63 min-w230px min-h42px!
+    @apply select-none! hover:text-stone-500 hover:underline hover:border-#d6ff63 min-w230px min-h52px! w100%
     div
       @apply select-none!
     &.active
-      @apply border-#d6ff63! border-width-1px! shadow-none!
-      outline: solid #d6ff63 2px !important
+      @apply border-#d6ff63! border-width-1px! shadow-none! outline-solid-stone outline-2px
 
   input
     @apply px-5px rounded border bg-white cursor-pointer rounded-3xl! min-w240px fs-14px! h28px! py0
@@ -229,8 +390,7 @@ import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js
     @apply border-1px border-#c1c7cf border-solid text-center
     @apply disabled:(bg-gray-100 cursor-not-allowed)
     &:focus
-      @apply border-#d6ff63! border-width-1px shadow-none!
-      outline: solid #d6ff63 2px
+      @apply border-#d6ff63! border-width-1px shadow-none! outline-solid-stone outline-2px
     &.is-invalid
       @apply border-red-500
 
@@ -243,7 +403,8 @@ import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js
   //.flatpickr-day.selected
   //  @apply bg-red-400 border-red-500 hover:bg-red-500 hover:border-red-200
   .flatpickr-day.selected.today, .flatpickr-day.selected
-    @apply bg-lime-400! border-lime-500! text-black! hover:bg-lime-300! hover:border-lime-400! hover:text-emerald-700!
+    @apply bg-lime-400! border-stone-500! text-black! hover:bg-stone-300! hover:border-stone-400!
+    @apply hover:text-emerald-700!
   .flatpickr-day.selected.today
     @apply fw-bold!
 
@@ -310,7 +471,7 @@ import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js
 // Кастомизация flatpickr
 //// Важно: уберите scoped чтобы стили применились к элементам flatpickr
 .custom-flatpickr-theme
-  @apply bg-white rounded-lg shadow-lg border border-#c1c7cf
+  @apply bg-white rounded-lg! shadow-lg! border! border-#c1c7cf!
   &.has-event
     @apply fw-bold
 

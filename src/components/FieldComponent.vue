@@ -1,20 +1,21 @@
 <script lang="ts">
-import IBaseVueComponent from '../Interfaces/IBaseVueComponent'
-import {BaseComponent, Prop} from '../core'
+import {BaseComponent, Prop, Watch} from '../core'
+import IFieldComponent from '../Interfaces/IFieldComponent'
 
 /**
  * Базовый компонент.
  * В дальнейшем планируется в него внедрять полезные методы и реактивные свойства (размеры окна, тип и т.д.).
  * От него можно наследовать любой компонент.
  */
-export default abstract class FieldComponent extends BaseComponent implements IBaseVueComponent {
+export default abstract class FieldComponent extends BaseComponent implements IFieldComponent {
   /** Входящее значение */
   @Prop(String, Number, Array, Object, Boolean) readonly inputValue: any = null
   @Prop(String, Number, Array, Object, Boolean) readonly modelValue: any = null
   /** Значение по умолчанию */
   @Prop(String, Number, Array, Object, Boolean) readonly default?: any = null
   @Prop(Boolean) readonly disabled?: boolean = false
-  @Prop(String) readonly placeholder?: string = ''
+  // TODO fix parent props replace to child and uncomment
+  // @Prop(String) readonly placeholder: string = ''
   emitsParent = ['update:modelValue']
   /** Динамическое значение поля */
   value: any = null
@@ -26,6 +27,11 @@ export default abstract class FieldComponent extends BaseComponent implements IB
   }
   mountedParent() {
 
+  }
+
+  onValueChange(value: any){}
+  @Watch('value', true) _valueWatch(value: any) {
+    this.onValueChange(value)
   }
 
   getValue() {

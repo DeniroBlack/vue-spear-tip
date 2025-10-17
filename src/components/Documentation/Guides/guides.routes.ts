@@ -44,8 +44,8 @@ export default [
     component: SassConfigGuide
   },
   {
-    path: '/config/uno-tailwind',
-    name: 'UnoCss/Tailwindcss Config',
+    path: '/config/unocss',
+    name: 'UnoCss Config',
     component: UnoCssConfigGuide
   },
   {

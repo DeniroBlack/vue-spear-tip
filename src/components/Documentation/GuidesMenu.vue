@@ -47,6 +47,8 @@ import {GuidesRoutes, KitRoutes} from './router'
 body, html
   @apply p0 m0 box-sizing-border-box
   font-family: "Nunito Sans", sans-serif
+input
+  font-family: "Nunito Sans", sans-serif
 a
   @apply decoration-none! hover:decoration-underline!
 </style>
