@@ -1,14 +1,33 @@
 <template lang="pug">
   .tabs
     .tabs__headers
-      .tabs__header(
-        v-for="(tab, index) in $slots"
-        :key="index"
-        :class="{ 'tabs__header--active': currentTab === index }"
-        @click="setCurrentTab(index)"
-      ) {{ tab().toString()  }}
-    .tabs__content
-      //slot(:name="currentTabName")
+      template(
+        v-for="(slot, name) in $slots"
+      )
+        .tabs__header(
+          v-if="name.startsWith('$title-')"
+          :class="{ 'tabs__header--active': currentTab === name.split('-')[1] }"
+          @click="setCurrentTab(name.split('-')[1])"
+        )
+          slot(:name="name")
+
+      template(
+        v-for="(slot, name) in $slots"
+      )
+        .tabs__header(
+          v-if="!name.startsWith('$title') && !$slots?.[`$title-${name}`]"
+          :class="{ 'tabs__header--active': currentTab === name }"
+          @click="setCurrentTab(name)"
+        ) {{ name }}
+
+    template(
+      v-for="(slot, name) in $slots"
+    )
+      .tabs__content(
+        v-if="!name.startsWith('$')"
+        v-show="currentTab == name"
+      )
+        slot(:name="name")
       //slot(v-if="showDefaultSlot")
 </template>
 
@@ -29,7 +48,7 @@ interface TabSlot {
  */
 @VST export default class Tabs extends BaseComponent {
 
-  currentTab = 0
+  currentTab = 'default'
   CommentT: typeof Comment = Comment
   mounted() {
     // console.log('Tabs', this.tabSlots)
@@ -52,8 +71,8 @@ interface TabSlot {
   //   return this.currentTab === 0 && this.tabSlots.length === 0
   // }
 
-  setCurrentTab(index: number): void {
-    this.currentTab = index;
+  setCurrentTab(name: string): void {
+    this.currentTab = name;
   }
 
   getTabTitle(tab: TabSlot): string {
@@ -69,7 +88,7 @@ interface TabSlot {
   &__headers
     display: flex
     border-bottom: 1px solid #e0e0e0
-    margin-bottom: 1rem
+    margin-bottom: 3px
     background-color: #fafafa
 
   &__header
@@ -91,7 +110,7 @@ interface TabSlot {
   &__content
     padding: 1rem
     min-height: 200px
-    border: 1px solid #e0e0e0
+    //border: 1px solid #e0e0e0
     border-radius: 4px
     background-color: white
 </style>

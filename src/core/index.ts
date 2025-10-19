@@ -109,6 +109,46 @@ globalThis.$VST.generateRandomKey = (length: number = 32): string => {
 }
 
 
+// -----------------------
+// Сериализация данных с исключением рекурсий
+// -----------------------
+globalThis.$VST.safeStringify = (message: any) => {
+  if (typeof message !== "object" || message === null) return message
+  try {
+    const stack: any[] = []
+    const keys: string[] = []
+    let isInitialCall = true
+    
+    function replacer(this: any, key: string, value: any): any {
+      if (stack.length > 0) {
+        const thisPos = stack.indexOf(this)
+        if (thisPos !== -1) {
+          stack.splice(thisPos + 1)
+          keys.splice(thisPos + 1, keys.length)
+        } else {
+          stack.push(this)
+          keys.push(key)
+        }
+        
+        if (value && typeof value === "object") {
+          if (stack.indexOf(value) !== -1) {
+            return "[Circular]"
+          }
+        }
+      } else if (isInitialCall) {
+        stack.push(value)
+        isInitialCall = false
+      }
+      return value
+    }
+    
+    return JSON.stringify(message, replacer)
+  } catch (error: any) {
+    return `{"error": "Failed to stringify: ${error.message}"}`
+  }
+}
+
+
 export * from './VueClassComponent'
 export * from './VueClass'
 export * from './Props'

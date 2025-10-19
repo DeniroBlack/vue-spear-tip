@@ -32,10 +32,11 @@
       :force12hours
       :dtPresetLocale="locale"
       :disabled
+      fontSize="1rem"
       @keypress.enter="_inputEnter()"
       ref="VSTStringField"
     )
-    div(class="cursor-pointer absolute op-0 l-50% translate-x--50%" v-show="value" )
+    div(class="cursor-pointer absolute op-0 t-0 l-50% translate-x--50%" v-show="value" )
       input(
         ref="picker"
         type="text"
@@ -43,13 +44,14 @@
         @mousedown.prevent
       )
     div(
-      class="w20px h20px text-stone absolute t-13px l-12px z4 cursor-pointer hover:scale-130"
+      class="w22px h22px text-stone absolute t-13px l-12px z4 cursor-pointer hover:scale-130"
       v-if="!disabled"
     )
       CalendarDaysIcon(
         @click="value ? _inputFocus() : addDate()"
       )
     component(is="style" v-if="!showCalendar") .flatpickr-calendar {display: none !important}
+    component(is="style") .flatpickr-calendar {box-shadow: 0px 2px 13px var(--un-shadow-color, rgb(193 193 193)) !important}
     //div {{ value }}
 </template>
 
@@ -150,7 +152,7 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
           setTimeout(() => {
             this.showCalendar = true
             this.$refs.picker.setAttribute('value', this._formatDate(new Date(zonedDate.epochMilliseconds)))
-            this.fp?.setDate(new Date($VST.DT(this.value).epochMilliseconds))
+            this.fp?.setDate(new Date($VST.DT(this.value!).epochMilliseconds))
             if (!isNewVal) {
               this.fp?.open()
             }
@@ -169,7 +171,7 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
 
   private _preventMaskDateChange = false
   private _initPicker() {
-    const locale = ((this.force12hours ? 'en-US'  : this.locale) || new Intl.DateTimeFormat().resolvedOptions()?.locale)
+    const locale = ((this.force12hours ? 'en-US'  : this.locale) || this.VST.$r.locale)
     const localeShort = locale?.split?.('-')?.[0]
     if (!this.$refs.picker || !localeShort) return
     this.localeInner = localeShort
@@ -252,6 +254,9 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
   }
 
   private _changeInput(val: string) {
+    if (!val?.trim?.()) {
+      this.$emit('update:modelValue', this.value = null)
+    }
     if (this.fp && !this.fp.isOpen && !this.value) {
       this.fp.open()
     }
@@ -385,7 +390,7 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
       @apply border-#d6ff63! border-width-1px! shadow-none! outline-solid-stone outline-2px
 
   input
-    @apply px-5px rounded border bg-white cursor-pointer rounded-3xl! min-w240px fs-14px! h28px! py0
+    @apply px-5px rounded border bg-white cursor-pointer rounded-3xl! min-w240px 1rem! h28px! py0
     @apply user-select-none w[calc(100%-12px)]
     @apply border-1px border-#c1c7cf border-solid text-center
     @apply disabled:(bg-gray-100 cursor-not-allowed)
@@ -409,13 +414,13 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
     @apply fw-bold!
 
   .flatpickr-months
-    @apply flex items-center justify-center pt1px
+    @apply flex! items-center justify-center pt1px
     .flatpickr-prev-month, .flatpickr-next-month
-      @apply flex items-center justify-center
+      @apply flex! items-center! justify-center!
     .flatpickr-prev-month
-      @apply ml20px h22px
+      @apply ml20px h40px p0
     .flatpickr-next-month
-      @apply mr20px h22px
+      @apply mr20px h40px p0
   .flatpickr-monthDropdown-months
     @apply flex items-center justify-center h25px! fs-16px! overflow-hidden!
   .flatpickr-current-month

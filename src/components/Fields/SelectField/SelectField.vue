@@ -34,6 +34,10 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
   @Prop(Boolean) readonly autofocus: boolean = false
   @Prop(String) readonly mode: 'select' | 'multi' | 'tags' = 'select'
   @Prop(Array) readonly items: { key: string | number, value: string, selected?: string }[]|null = null
+  @Prop(String, Object) readonly placeholder: string|{[k:string]:string} = {
+    en: 'Select value',
+    ru: 'Выберите значение',
+  }
   tagify: Tagify
   reactiveValue: any = null
   randomClass: string = ''
@@ -92,7 +96,8 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
       },
       onChangeAfterBlur: false,
       delimiters: null,
-      placeholder: this.placeholder || 'Выберите значение',
+      placeholder: (this.placeholder as any)?.[this.VST.$r.locale]
+          || (this.placeholder as any)?.en || this.placeholder || 'Выберите значение',
       callbacks: {
         change: (e: any) => {
           let modelValue: any = ''
@@ -113,7 +118,7 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
                 ))))
                 if (value) {
                   this.tagify.addTags(this.reactiveValue = value)
-                  this.value = modelValue
+                  this.$emit('update:modelValue',  this.value = modelValue)
                 }
               }, 4)
             }
@@ -123,7 +128,7 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
               modelValue = Array.isArray(modelValue) ? modelValue.map(v => v.key) : [modelValue]
               this.tagify.addTags(JSON.parse(e.detail?.value))
               this.nextTick(() => {
-                this.value = modelValue
+                this.$emit('update:modelValue',  this.value = modelValue)
                 this.reactiveValue = e.detail?.value
               }, 4)
             }
@@ -146,13 +151,13 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
           if (this.mode == 'select' && !(e.detail?.tagify?.value ?? []).length && this.value !== null) {
             this.tagify.removeAllTags()
             this.reactiveValue = null
-            this.value = null
+            this.$emit('update:modelValue',  this.value = null)
           }
           else if (this.mode == 'tags') {
             const reactiveValue = JSON.parse(this.reactiveValue)?.filter((v: any) => v.key != e.detail?.data?.key)
             if (!reactiveValue?.length && this.reactiveValue != '[]') {
               this.tagify.removeAllTags()
-              this.value = []
+              this.$emit('update:modelValue',  this.value = [])
               this.reactiveValue = '[]'
             }
           }
@@ -164,7 +169,7 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
               if (!reactiveValue?.length && this.reactiveValue != '[]') {
                 this.reactiveValue = '[]'
                 this.tagify.removeAllTags()
-                this.value = []
+                this.$emit('update:modelValue',  this.value = [])
               }
             }, 4)
           }
@@ -263,14 +268,14 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
   padding: 0 0 0 10px !important
 
 .tagify__input
-  @apply min-w80px! fs-0.9rem
+  @apply min-w80px! fs-0.9rem duration-0!
   transition: 100ms !important
   padding: .3em .5em !important
   //font-size: 13px
 
 .tagify--empty.tagify--select
-  //@apply min-w120px!
-  padding: 5px 0 0 15px !important
+  @apply text-stone
+  padding: 2px 0 0 15px !important
 .tagify__dropdown
   @apply mt4px! border-0!
   &.tagify__dropdown__openInModal
@@ -314,7 +319,7 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
 
 :not(.vst-select-multi)
   .tagify--focus.tagify--noTags
-    @apply pt5px! min-h40px!
+    @apply pt2px! min-h40px!
   .tagify--select:not(.tagify--empty)
     @apply min-h40px! mt5px
 

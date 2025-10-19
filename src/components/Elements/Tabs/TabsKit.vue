@@ -6,8 +6,12 @@
       h1 TabsKit
       div(class="flex")
         Tabs
-          slot 1
-          template(#tab title="asdasd") 2
+
+          template(#$title-default) DEF
+          template(#default) 1
+
+          template(#$title-tab) TAB TITLE
+          template(#tab) 2
 </template>
 
 

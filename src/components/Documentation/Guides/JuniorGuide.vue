@@ -4,7 +4,12 @@
       GuidesMenu
     div(class="w[calc(100%-260px)]")
       h1 JuniorGuide
-      div JuniorGuide
+      div.
+        Meta development level. You don't need to know all web browser tecnologies to create
+        multiplatform web apps. Instructions will be provided later.
+
+      //- TODO Если создать песочницу. Инструкции по unocss и pug как первых технологий для джуна, может сработать.
+      //-   Нужны эксперементы с новичками.
 </template>
 
 

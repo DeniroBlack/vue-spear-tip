@@ -39,7 +39,7 @@
       ) {{ utc }}
 
     div(
-      class="w20px h20px text-stone absolute t-13px l-12px z4 cursor-pointer hover:scale-130"
+      class="w22px h22px text-stone absolute t-13px l-12px z4 cursor-pointer hover:scale-130"
       v-if="disabled || alwaysCopyIcon"
     )
       ClipboardDocumentListIcon(
@@ -59,7 +59,7 @@
       }`
     )
       NoSymbolIcon(
-        @click="setValue('')"
+        @click="_onInput('')"
       )
     component(is="style" v-if="disabled || alwaysCopyIcon").
       .sf{{ _randKey }}[{{ $options.__scopeId }}] input {
@@ -129,7 +129,7 @@ import { NoSymbolIcon } from "@heroicons/vue/20/solid"
     if (!this.is12hours && this.isDateTime) {
       try {
         const options = new Intl.DateTimeFormat(
-            (this.dtPresetLocale || new Intl.DateTimeFormat().resolvedOptions()?.locale), { hour: 'numeric' })
+            (this.dtPresetLocale || this.VST.$r.locale), { hour: 'numeric' })
             .resolvedOptions()
         this.is12hours = options.hourCycle === 'h11' || options.hourCycle === 'h12'
       } catch (e) {
@@ -145,7 +145,7 @@ import { NoSymbolIcon } from "@heroicons/vue/20/solid"
     this.value = this.modelValue || this.inputValue || ''
     if (this.isDateTime) {
       const parts = (new Intl.DateTimeFormat((
-          this.dtPresetLocale || new Intl.DateTimeFormat().resolvedOptions().locale
+          this.dtPresetLocale || this.VST.$r.locale
       ), {
         year: 'numeric',
         month: '2-digit',
@@ -285,8 +285,13 @@ import { NoSymbolIcon } from "@heroicons/vue/20/solid"
     this.$emit('focus')
   }
   private _onInput(event: any) {
-    this.$emit('input', this.value = event.target.value.trim())
-  }
+    const val = event?.target?.value?.trim?.() || event
+    if (typeof val != 'string') return
+    this.$emit('input',
+        this.value = val
+    )
+    this.$emit('change', this.value)
+    this.$emit('update:modelValue', this.value)}
 
   private _extractDateOnly(dateString:string): string|null {
     const regex = /([\d\w]{2,4}[./_-][\d\w]{2,4}[./_-][\d\w]{2,4})/
@@ -383,11 +388,11 @@ import { NoSymbolIcon } from "@heroicons/vue/20/solid"
   }
 
   // Watch dynamic changes to items prop
-  @Watch('value', true) _valueWatch(value: any) {
-    this.$emit('input', value)
-    this.$emit('change', value)
-    this.$emit('update:modelValue', value)
-  }
+  // @Watch('value', true) _valueWatch(value: any) {
+  //   this.$emit('input', value)
+  //   this.$emit('change', value)
+  //   this.$emit('update:modelValue', value)
+  // }
   /**  */
   declare isDateTime: boolean; @Computed('isDateTime') _valueComputed(): boolean {
     return ['date', 'datetime', 'datetimeSec'].includes(this.maskPreset ?? '')
@@ -398,7 +403,7 @@ import { NoSymbolIcon } from "@heroicons/vue/20/solid"
 <style scoped lang="sass">
 input
   @apply w100%! border-color-#c1c7cf border-solid border-1px! min-h44px pl25px pr35px rounded-3xl fs-1rem
-  @apply outline-stone-400 outline-1px focus:bg-white
+  @apply outline-stone-400 outline-1px focus:bg-white bg-white
   &::placeholder
     @apply fs-1rem text-#c1c7cf!
 //.vst-select-multi

@@ -18,11 +18,18 @@ export default interface IGlobalVST {
    */
   generateRandomKey(length?: number): string
   
+  /**
+   * Сериализация данных с исключением рекурсий
+   * @param any
+   */
+  safeStringify(any: any): string
+  
   /** Default time zone on $VST.DT() method (like Europe/Moscow). As default use browser tz */
   DT_TZ?: string
 }
 
 interface IGlobalReactiveElements {
+  locale: string
   isMobile: boolean
   isTablet: boolean
   isNotebook: boolean

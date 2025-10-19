@@ -16,6 +16,7 @@ export default abstract class BaseComponent extends VueClass implements IBaseVue
     const { _dynamic, ...vst } = $VST
     this.VST = vst
     this.VST.$r = ref({
+      locale: (Intl ? ((new Intl.DateTimeFormat())?.resolvedOptions?.()?.locale) : navigator.language) || 'en',
       isMobile: false,
       isTablet: false,
       isNotebook: false,

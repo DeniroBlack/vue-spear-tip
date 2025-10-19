@@ -35,11 +35,11 @@ export default [
     name: 'Button',
     component: ButtonKitElement
   },
-  // {
-  //   path: '/elements/tabs',
-  //   name: 'Tabs',
-  //   component: TabsKit
-  // },
+  {
+    path: '/elements/tabs',
+    name: 'Tabs',
+    component: TabsKit
+  },
   {
     path: '/elements/qr',
     name: 'QR Code',
