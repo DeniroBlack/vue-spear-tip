@@ -3,21 +3,39 @@
   div
     div
       Tabs
-        template(#$title-default) Examples
+        template(#$title-default)
+          slot(name="$title-default")
+            div Examples
         template(#default)
           slot
+            div No content Examples
 
-        template(#$title-props) @Props
-        template(#props) Props
+        template(#$title-props)
+          slot(name="$title-props")
+            div @Props
+        template(#props)
+          slot(name="props")
+            div Props not set
 
-        template(#$title-events) @Events
-        template(#events) 2
+        template(#$title-events)
+          slot(name="$title-events")
+            div @Events
+        template(#events)
+          slot(name="events") Events not set
 
-        template(#$title-methods) Methods
-        template(#methods) methods
-        //
-        //template(#$title-methods) Methods
-        //template(#methods) methods
+        template(#$title-methods)
+          slot(name="$title-events")
+            div Methods
+        template(#methods)
+          slot(name="methods")
+            div Methods not set
+
+        template(#$title-refs)
+          slot(name="$title-refs")
+            div Referenses
+        template(#refs)
+          slot(name="refs")
+            div List of references not set
 
     div(class="mt20px")
       div Template example

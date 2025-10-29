@@ -54,11 +54,17 @@ export default defineConfig(async (options) => {
       resolve(__dirname, 'src/components/BaseComponent.vue'),
       resolve(__dirname, 'src/replaceable/BaseComponent.vue'),
     )
+    
     await promises.copyFile(
-      resolve(__dirname, 'src/components/FieldComponent.vue'),
+      resolve(__dirname, `src/components/FieldComponent${
+        // По факту во всех полях используется unocss
+        options.mode === 'examples-build' ? 'UnoCss' :
+          ''
+      }.vue`),
       resolve(__dirname, 'src/replaceable/FieldComponent.vue'),
     )
   }
+  
   
   const build = options.mode === 'examples-docs-build'
     ? {
@@ -163,7 +169,7 @@ export default defineConfig(async (options) => {
         name: 'post-build-actions',
         async closeBundle() {
           await promises.copyFile(
-            resolve(__dirname, 'src/replaceable/FieldComponent.vue'),
+            resolve(__dirname, 'src/components/FieldComponent.vue'),
             resolve(__dirname, 'dist/replaceable/FieldComponent.vue')
           )
           await promises.copyFile(

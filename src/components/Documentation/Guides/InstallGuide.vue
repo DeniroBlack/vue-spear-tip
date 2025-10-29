@@ -66,13 +66,13 @@
                 copy: true,
                 lang: 'bash',
                 title: 'Bun.JS',
-                code: "bun add vue-spear-tip"
+                code: "bun add vue vue-spear-tip"
               },
               {
                 copy: true,
                 lang: 'bash',
                 title: 'npm',
-                code: 'npm i vue-spear-tip'
+                code: 'npm i vue vue-spear-tip'
               }
             ]`
           )

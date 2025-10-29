@@ -6,6 +6,7 @@ import SelectKitField from './Fields/SelectKitField.vue'
 import DateKitField from './Fields/DateKitField.vue'
 import StringKitField from './Fields/StringKitField.vue'
 import TabsKit from '../../Elements/Tabs/TabsKit.vue'
+import TextKitField from './Fields/TextKitField.vue'
 
 export default [
   {
@@ -65,6 +66,11 @@ export default [
     path: '/fields/string',
     name: 'String',
     component: StringKitField
+  },
+  {
+    path: '/fields/text',
+    name: 'Text',
+    component: TextKitField
   },
   {
     path: '/fields/select',

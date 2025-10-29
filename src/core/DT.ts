@@ -5,8 +5,9 @@ import { Temporal } from 'temporal-polyfill'
  * @param timeZone 
  * @returns ${Temporal.ZonedDateTime}
  */
-function DT (dateTimeString?: string|number|Temporal.ZonedDateTime, timeZone?: string): Temporal.ZonedDateTime {
-  if (dateTimeString instanceof Temporal.ZonedDateTime) return dateTimeString
+function DT (dateTimeString?: string|number|Temporal.ZonedDateTime|Date, timeZone?: string): Temporal.ZonedDateTime {
+  if (dateTimeString instanceof Temporal.ZonedDateTime) return dateTimeString // @ts-ignore
+  if (dateTimeString instanceof Date) return $VST.DT(dateTimeString.getTime())
   if (!timeZone) { // @ts-ignore
     timeZone = $VST.DTTZ ?? Temporal.Now.timeZoneId()
   }
@@ -37,6 +38,7 @@ function DT (dateTimeString?: string|number|Temporal.ZonedDateTime, timeZone?: s
       try {
         return Temporal.PlainDate.from(dateTimeString).toZonedDateTime(timeZone)
       } catch (e: any) {
+        // dateTimeString = dateTimeString?.toString?.() ?? ''
         // Если строка содержит пробел между датой и временем
         if (dateTimeString.includes(' ')) {
           isoDateTimeString = dateTimeString.replace(' ', 'T')

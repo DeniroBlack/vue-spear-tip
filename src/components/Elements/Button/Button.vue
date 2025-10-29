@@ -112,7 +112,7 @@ import ButtonInherited from './ButtonInherited'
 
 <style scoped lang="sass">
 button
-  @apply w100% h100% flex! items-center! justify-center! min-h40px
+  @apply w100% h100% flex! items-center! justify-center!
   touch-action: manipulation
   position: relative
   font-size: 14px

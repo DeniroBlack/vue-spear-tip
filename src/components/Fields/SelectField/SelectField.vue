@@ -5,13 +5,14 @@
       'vst-select-multi': mode == 'multi' || mode == 'tags',
     }`
   )
-    input(ref="selectInput" :value="reactiveValue" :autofocus)
+    input(ref="selectInput" :id="'vst-select-'+VST.generateRandomKey()" :value="reactiveValue" :autofocus)
 </template>
 
 
 <script lang="ts">
-import './tagify.css' // @ts-ignore
-import Tagify from './tagify.esm.js'
+import './tagify.css'
+import Tagify from '@yaireo/tagify' // @ts-ignore
+import TagifyEsm from './tagify.esm.js'
 
 import {Prop, VST, Watch} from '../../../core'
 import FieldComponent from '../../../replaceable/FieldComponent.vue'
@@ -32,13 +33,14 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
     selectInput: HTMLInputElement
   }
   @Prop(Boolean) readonly autofocus: boolean = false
+  @Prop(String) readonly inputValidatePattern: string|null = null
   @Prop(String) readonly mode: 'select' | 'multi' | 'tags' = 'select'
   @Prop(Array) readonly items: { key: string | number, value: string, selected?: string }[]|null = null
   @Prop(String, Object) readonly placeholder: string|{[k:string]:string} = {
     en: 'Select value',
     ru: 'Выберите значение',
   }
-  tagify: Tagify
+  tagify: TagifyEsm
   reactiveValue: any = null
   randomClass: string = ''
   itemsInner: any[] = []
@@ -52,10 +54,8 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
   private _isFirstValueSet: boolean = false
   private _isIgnoreSetTags: boolean = false
   mountedParent() {
-    this.tagify = new Tagify(this.$refs.selectInput, {
-      enforceWhitelist: this.mode == 'select' ? undefined : (this.mode == 'tags' ? false : true),
+    let settings: Tagify.TagifySettings = {
       mode: this.mode == 'select' ? 'select' : undefined,
-      escapeHTML: false,
       whitelist: this.itemsInner
       //     [
       //   {
@@ -84,9 +84,8 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
       //   },
       // ]
       ,
-      editTags: this.mode == 'tags',
       dropdown: {
-        maxTags: 5,
+        // maxTags: 5,
         // fetchSuggestions: this.mode != 'select',
         highlightFirst: true,
         clearOnSelect: true,
@@ -95,9 +94,11 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
         maxItems: 2000,
       },
       onChangeAfterBlur: false,
-      delimiters: null,
-      placeholder: (this.placeholder as any)?.[this.VST.$r.locale]
-          || (this.placeholder as any)?.en || this.placeholder || 'Выберите значение',
+      // delimiters: null,
+      placeholder: typeof this.placeholder == 'string'
+          ? this.placeholder
+          : (this.placeholder as any)?.[this.VST.$r.locale]
+            || (this.placeholder as any)?.en || 'Выберите значение',
       callbacks: {
         change: (e: any) => {
           let modelValue: any = ''
@@ -114,7 +115,7 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
                   )
               this.nextTick(() => {
                 const value = (JSON.parse(JSON.stringify((this.itemsInner.find(
-                    v => (v?.key) === modelValue)?.value ?? null
+                        v => (v?.key) === modelValue)?.value ?? null
                 ))))
                 if (value) {
                   this.tagify.addTags(this.reactiveValue = value)
@@ -176,31 +177,44 @@ import FieldComponent from '../../../replaceable/FieldComponent.vue'
         }
       },
       templates: {
-      // todo доработать вставку html замену шаблона элементов, идеально если через слоты можно было бы шаблон указать
-      //   tag: (t, i) => {
-      //     let value: any  = t.value?.value ?? t.value;
-      //     if (this.mode == 'select' && (value = i?.DOM?.originalInput?.getAttribute?.('value')?.trim?.())?.length) {
-      //       if (value?.startsWith('{') || value?.startsWith('[')) {
-      //         value = JSON.parse(value)
-      //         value = value?.[0]?.htmlValue || value
-      //       }
-      //     }
-      //     console.log('valu2e', value)
-      //     return `<tag title="${t.title || t.value}" contenteditable="false" tabIndex="-1" class="tagify__tag">
-      //       <x title='' class="tagify__tag__removeBtn" tabIndex="-1" role='button' aria-label='remove tag'></x>
-      //       <div><span contenteditable="${
-      //         this.mode == 'select' ? 'true' : 'false'
-      //       }" autocapitalize="false" autocorrect="off" spellcheck="false" class="tagify__tag-text">${
-      //         value
-      //     }</span></div></tag>`
-      //   },
-      //
-      //   // dropdownItem: (t, i) => {
-      //   // todo найти в исходниках tagify оригинальный шаблон
-      //   //   return `<div class='tagify__dropdown'>${t.value}</div>`
-      //   // }
+        // todo доработать вставку html замену шаблона элементов, идеально если через слоты можно было бы шаблон указать
+        //   tag: (t, i) => {
+        //     let value: any  = t.value?.value ?? t.value;
+        //     if (this.mode == 'select' && (value = i?.DOM?.originalInput?.getAttribute?.('value')?.trim?.())?.length) {
+        //       if (value?.startsWith('{') || value?.startsWith('[')) {
+        //         value = JSON.parse(value)
+        //         value = value?.[0]?.htmlValue || value
+        //       }
+        //     }
+        //     console.log('valu2e', value)
+        //     return `<tag title="${t.title || t.value}" contenteditable="false" tabIndex="-1" class="tagify__tag">
+        //       <x title='' class="tagify__tag__removeBtn" tabIndex="-1" role='button' aria-label='remove tag'></x>
+        //       <div><span contenteditable="${
+        //         this.mode == 'select' ? 'true' : 'false'
+        //       }" autocapitalize="false" autocorrect="off" spellcheck="false" class="tagify__tag-text">${
+        //         value
+        //     }</span></div></tag>`
+        //   },
+        //
+        //   // dropdownItem: (t, i) => {
+        //   // todo найти в исходниках tagify оригинальный шаблон
+        //   //   return `<div class='tagify__dropdown'>${t.value}</div>`
+        //   // }
       },
-    })
+    }
+    if (this.mode !== 'tags') {
+      settings.editTags = false
+    }
+    else {
+      if (this.inputValidatePattern?.trim?.()) {
+        settings.pattern = new RegExp(this.inputValidatePattern.trim(), 'i')
+        settings.editTags = {
+          clicks: 1,
+          keepInvalid: true
+        }
+      }
+    }
+    this.tagify = new TagifyEsm(this.$refs.selectInput, settings)
     this.setTags()
   }
 

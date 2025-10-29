@@ -3,9 +3,7 @@ import {BaseComponent, Prop, Watch} from '../core'
 import IFieldComponent from '../Interfaces/IFieldComponent'
 
 /**
- * Базовый компонент.
- * В дальнейшем планируется в него внедрять полезные методы и реактивные свойства (размеры окна, тип и т.д.).
- * От него можно наследовать любой компонент.
+ * Базовый компонент поля.
  */
 export default abstract class FieldComponent extends BaseComponent implements IFieldComponent {
   /** Входящее значение */

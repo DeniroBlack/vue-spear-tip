@@ -28,6 +28,7 @@ export default interface IGlobalVST {
   DT_TZ?: string
 }
 
+/** Интерфейс реактивных глобальных элементов доступных в любом компоненте наследуемым от BaseComponent */
 interface IGlobalReactiveElements {
   locale: string
   isMobile: boolean

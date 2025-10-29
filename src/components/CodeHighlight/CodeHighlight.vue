@@ -81,7 +81,7 @@ import 'vue-highlight-code/dist/style.css'
 
 
   mounted() {
-    console.log('mounted', this.code)
+    // console.log('mounted', this.code)
     // if extendable code here
   }
   mountedParent() {

@@ -8,8 +8,17 @@ import SassConfigGuide from './SassConfigGuide.vue'
 import UnoCssConfigGuide from './UnoCssConfigGuide.vue'
 import LaravelConfigGuide from './LaravelConfigGuide.vue'
 import JuniorGuide from './JuniorGuide.vue'
+import WhenGuide from './WhenGuide.vue'
 
 export default [
+  {
+    path: '/why',
+    name: 'When, why, and for what?',
+    component: WhenGuide
+  },
+  {
+    name: '<hr style="border: solid #ccc; border-width: 1px 0 0">',
+  },
   {
     name: '<b>Guides</b>',
   },
@@ -58,4 +67,9 @@ export default [
     name: 'Junior Start Guide',
     component: JuniorGuide
   },
+  // {
+  //   path: '/junior',
+  //   name: 'Backend Developer Guide',
+  //   component: JuniorGuide
+  // },
 ]

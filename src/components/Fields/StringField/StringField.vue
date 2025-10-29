@@ -335,7 +335,7 @@ import { NoSymbolIcon } from "@heroicons/vue/20/solid"
       return str.toUpperCase()
     }
   }
-  
+
   replaceInMask(rule: string, mask: string, value: string, type = 'MM') {
     const typeIndex = rule.indexOf(type)
     if (typeIndex === -1) return mask
