@@ -5,7 +5,7 @@ export default interface IGlobalVST {
   $on(event: string, callback: (message: any) => any): void
   $off(event: string, callback: (message: any) => any): void
   $emit(event: string, message?: any): void
-  DT(dateTimeString?: string|number|Temporal.ZonedDateTime, timeZone?: string): Temporal.ZonedDateTime
+  DT(dateTimeString?: string|number|Temporal.ZonedDateTime|Date, timeZone?: string): Temporal.ZonedDateTime
   copyToClipboard(text: string): void
   /**
    * Генерация случайного сложного пароля

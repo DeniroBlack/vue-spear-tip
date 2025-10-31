@@ -26,13 +26,14 @@
       :placeholder="(placeholder?.[localeInner] || placeholder?.en || placeholder)"
       class=`z2`
       @focus="_inputFocus()"
-      @change="v => _changeInput(v)"
+      @blur="v => _onBlur(v)"
+      @change="(v, reset) => _changeInput(v, reset)"
       @dateMaskChange="_dateMaskChange"
       :force12hours
       :dtPresetLocale="locale"
       :disabled
       fontSize="1rem"
-      @keypress.enter="_inputEnter()"
+      @keypress.enter="_inputEnter($refs.VSTStringField.value)"
       ref="VSTStringField"
     )
     div(class="cursor-pointer absolute op-0 t-0 l-50% translate-x--50%" v-show="value" )
@@ -158,10 +159,6 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
     this._initTemporalUpdateOut = true
     this.value = this.modelValue || this.inputValue || null
 
-
-    console.log('this.maxField', this.maxField)
-    console.log('this.minField', this.minField)
-
     if (this.maxField)
       $VST.$on('$VST.components.fields.date.'+btoa(this.maxField), this._onMaxDateFieldChange)
     if (this.minField)
@@ -186,11 +183,9 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
   }
 
   private _onMaxDateFieldChange(stamp: number) {
-    console.log('max', this.maxField, stamp);
     this.fp?.set?.('maxDate', stamp ? new Date(stamp) : null)
   }
   private _onMinDateFieldChange(stamp: number) {
-    console.log('min', this.minField, stamp);
     this.fp?.set?.('minDate', stamp ? new Date(stamp) : null)
   }
 
@@ -201,12 +196,9 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
   addDate() {
     const zonedDate = $VST.DT()
     const isNewVal: boolean = !!this.value
-    this.$emit(
-        'update:modelValue',
-        this.value = this.value || (this.ISO861UTCMode ? zonedDate?.[
-          this.maskPreset == 'date' ? 'toPlainDate' : 'toPlainDateTime'
-        ]?.()?.toString().replace('T', ' ') : zonedDate.epochMilliseconds)
-    )
+    this.value = this.value || (this.ISO861UTCMode ? zonedDate?.[
+      this.maskPreset == 'date' ? 'toPlainDate' : 'toPlainDateTime'
+    ]?.()?.toString().replace('T', ' ') : zonedDate.epochMilliseconds)
     this.showCalendar = false
     setTimeout(() => {
       if (!this.fp) this._initPicker()
@@ -250,22 +242,21 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
     } catch (e) {
       pmHours = false
     }
-    const disable: any = [date => {
+    const disable: any = [(date: Date) => {
       if (this.disableWeekends) {
         return (date.getDay() === 5 || date.getDay() === 6)
       }
       if (this.disableDaysOfWeek?.length) {
-        return this.disableDaysOfWeek?.includes(date.getDay()+1)
+        return this.disableDaysOfWeek?.includes((date.getDay()+1) as any)
       }
-    }]
-    for (const disabledDay of this.disabledDays) {
+    }] // @ts-ignore
+    for (const disabledDay of this.disabledDays ?? []) {
       disable.push(new Date($VST.DT(disabledDay).epochMilliseconds))
     }
-    const locale = (localeShort ? FPLocales?.[localeShort] : FPLocales?.default) || FPLocales?.default || {}
-    if (this.firstDayOfWeek != 'auto') locale.firstDayOfWeek = (parseInt(this.firstDayOfWeek) || 1)-1
-    // @ts-ignore
+    let change // @ts-ignore
+    const locale = (localeShort ? FPLocales?.[localeShort] : FPLocales?.default) || FPLocales?.default || {} // @ts-ignore
+    if (this.firstDayOfWeek != 'auto') locale.firstDayOfWeek = (parseInt(this.firstDayOfWeek) || 1)-1 // @ts-ignore
     this.fp = (flatpickr as FlatpickrFn)(this.$refs.picker as HTMLElement, {
-      // defaultDate: $E.DT(this.value!).toString?.({ timeZoneName: 'never' })?.split?.('.')?.[0],
       enableTime: this.withTime,
       time_24hr: !pmHours,
       enableSeconds: this.withSeconds,
@@ -292,28 +283,6 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
           this._setInputMaskValueByDTStamp(time)
         }
       },
-      onChange: (dates: any) => {
-        // console.log('change', dates)
-        // if (dates[0]) {
-        //   let zonedDate = $VST.DT(dates[0].getTime())
-        //   console.log(zonedDate)
-        //   // Если включено время, но нет секунд, то сбрасываем последние до 00
-        //   if (this.withTime && !this.withSeconds) {
-        //     zonedDate = zonedDate.with({
-        //       second: 0
-        //     })
-        //   }
-        //   this.$emit(
-        //       'update:modelValue',
-        //       this.value = this.asTemporal
-        //           ? zonedDate
-        //           : (this.isMountedFromFormField
-        //                   ? zonedDate.toString()
-        //                   : this.parseTime(zonedDate)
-        //           )
-        //   )
-        // }
-      },
       onDayCreate: (dateObj, dateStr, fp, dayElem) => {
         let dt: Temporal.ZonedDateTime|null = null
         if (dateObj?.[0]) {
@@ -339,7 +308,7 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
           }
         }
       },
-      onMonthChange: (dateObj, dateStr, fp, dayElem) => {
+      onMonthChange: change = (dateObj: any, dateStr: any, fp: any, dayElem: any) => {
         for (const child of fp.days.children) {
           if (this.dayPreRender && !child.classList.contains('_vst-date-field-pre-rendered')) {
             let dt: Temporal.ZonedDateTime = $VST.DT(new Date(
@@ -359,26 +328,7 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
           }
         }
       },
-      onYearChange: (dateObj, dateStr, fp, dayElem) => {
-        for (const child of fp.days.children) {
-          if (this.dayPreRender && !child.classList.contains('_vst-date-field-pre-rendered')) {
-            let dt = $VST.DT(new Date(
-                `${fp.currentYear}-${
-                    (fp.currentMonth+1).toString().padStart(2, '0')
-                }-${dayElem.innerText.trim().toString().split('.')[0].padStart(2, '0')}`
-            ))
-            if (dayElem?.classList?.contains?.('prevMonthDay')) dt = dt.subtract({months: 1})
-            if (dayElem?.classList?.contains?.('nextMonthDay')) dt = dt.add({months: 1})
-            this.dayPreRender(
-              dayElem,
-              dt,
-              dayElem?.classList?.contains?.('nextMonthDay')
-                || (dayElem?.classList?.contains?.('prevMonthDay') ? false : null)
-            )
-            dayElem.classList.add('_vst-date-field-pre-rendered')
-          }
-        }
-      },
+      onYearChange: change,
     })
 
 
@@ -387,25 +337,58 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
         this._setInputMaskValueByDTStamp(this.value)
       }
     }, 150)
-    // Установка начального значения если есть
-    // if (this.value) {
-    //   this.setValue(this.value)c
-    // }
   }
 
   private _inputFocus() {
-    // todo мобильной версии
     if (this.fp && !this.fp.isOpen) {
       this.fp.open()
     }
   }
 
-  private _changeInput(val: string) {
-    if (!val?.trim?.()) {
+  private _onBlur(val: string) {
+    const isFromCalClick = !!this.fp?.isOpen
+    setTimeout(() => {
+      this.nextTick(() => {
+        if (!this.$refs.VSTStringField?.value && val?.includes('_')) {
+          this._changeInput('')
+        }
+        else if (val?.length && !val.includes('_') && (!this.withTime || !isFromCalClick)) {
+          const mask = this.$refs.VSTStringField.mask
+          const month = this.$refs.VSTStringField.getFromMask(mask, val, 'MM').toString().padStart(2, '0')
+          const year = this.$refs.VSTStringField.getFromMask(mask, val, 'YYYY').toString().padStart(4, '0')
+          const day = this.$refs.VSTStringField.getFromMask(mask, val, 'DD').toString().padStart(2, '0')
+          let hour = this.$refs.VSTStringField.getFromMask(mask, val, 'hh').toString().padStart(2, '0')
+          const minute = this.$refs.VSTStringField.getFromMask(mask, val, 'mm').toString().padStart(2, '0')
+          const seconds = this.$refs.VSTStringField.getFromMask(mask, val, 'ss').toString().padStart(2, '0')
+          let strDt = `${year}-${month}-${day}`
+          if (this.withTime) {
+            strDt += ` ${hour}:${minute}:${this.withSeconds ? seconds : '00'}`
+          }
+          if (!isFromCalClick) {
+            this.DT = $VST.DT(strDt.split('.')[0])
+            this._setInputMaskValueByDTStamp(this.DT.epochMilliseconds)
+          }
+        }
+        this.nextTick(() => {
+          if (this.fp && this.fp.isOpen && (!this.withTime || !isFromCalClick)) {
+            this.fp.close()
+          }
+        })
+      })
+    }, 150)
+  }
+
+  private _changeInput(val: string, reset: boolean = false) {
+    if (!val?.toString?.()?.trim?.()) {
       this.$emit('update:modelValue', this.value = null)
     }
-    if (this.fp && !this.fp.isOpen && !this.value) {
+    if (this.fp && !this.fp.isOpen && !this.value && !reset) {
       this.fp.open()
+    }
+    if (reset && !this.withTime) {
+      this.nextTick(() => {
+        this.addDate()
+      })
     }
   }
   private _inputEnter(val: string) {
@@ -413,6 +396,7 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
       this.fp.close()
     }
     this.$refs?.VSTStringField?.blur?.()
+    this._onBlur(val)
   }
 
   /**
@@ -443,7 +427,6 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
         ) : hour
       }
     }
-    // console.log('AmPm', AmPm)
 
     const dtc = new Date(
         year as number, (month as number)-1, day as number,
@@ -626,7 +609,6 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
 
 
 // Кастомизация flatpickr
-//// Важно: уберите scoped чтобы стили применились к элементам flatpickr
 .custom-flatpickr-theme
   @apply bg-white rounded-lg! shadow-lg! border! border-#c1c7cf!
   &.has-event
@@ -635,62 +617,4 @@ import { CalendarDaysIcon } from "@heroicons/vue/24/solid"
   &.selected
     @apply bg-blue-500 text-white border-blue-500 fs-13px!
     @apply hover:(bg-blue-600)
-//
-//  // Заголовок с месяцем/годом
-//  .flatpickr-current-month
-//    @apply text-gray-800 font-medium
-//
-//  // Дни недели
-//  .flatpickr-weekday
-//    @apply text-gray-500 font-normal
-//
-//  // Ячейки с датами
-//  .flatpickr-day
-//    @apply text-gray-700 rounded-full
-//    @apply hover:(bg-blue-50)
-
-//
-//    &.today
-//      @apply border-blue-500
-//
-//    &.disabled
-//      @apply text-gray-300 cursor-not-allowed
-//      @apply hover:(bg-transparent)
-//
-//  // Время
-//  .flatpickr-time
-//    @apply border-t border-gray-200
-//
-//    input
-//      @apply text-gray-700 font-medium
-//      @apply focus:(ring-0 border-0)
-//
-//    .flatpickr-am-pm
-//      @apply text-gray-500
-//      @apply hover:(bg-gray-50)
-//
-//  // Стрелки навигации
-//  .flatpickr-months
-//    .flatpickr-prev-month, .flatpickr-next-month
-//      @apply text-gray-400 p-2
-//      @apply hover:(text-blue-500)
-//
-//      svg
-//        @apply w-5 h-5
-//
-//  // Время
-//  .numInputWrapper
-//    @apply hover:(bg-gray-50)
-//
-//    &:hover
-//      .arrowUp, .arrowDown
-//        @apply opacity-100
-//
-//    .arrowUp, .arrowDown
-//      @apply opacity-0 transition-opacity
-//      @apply hover:(text-blue-500)
-//
-//  // Анимация появления
-//  &.open
-//    @apply animate-fadeIn
 </style>

@@ -59,25 +59,21 @@
       }`
     )
       NoSymbolIcon(
-        @click="_onInput('')"
+        @click="_onReset()"
       )
     component(is="style" v-if="disabled || alwaysCopyIcon").
       .sf{{ _randKey }}[{{ $options.__scopeId }}] input {
         padding-left: 40px !important;
       }
-
-    //input( :placeholder)
 </template>
 
 
 <script lang="ts">
-
 import {Computed, Prop, VST, Watch} from '../../../core'
 import FieldComponent from '../../../replaceable/FieldComponent.vue'
 import {IMask, IMaskComponent} from 'vue-imask'
 import { ClipboardDocumentListIcon, CheckBadgeIcon } from "@heroicons/vue/24/solid"
 import { NoSymbolIcon } from "@heroicons/vue/20/solid"
-
 
 /**
  * Компонент для ввода строкового текста или значения
@@ -90,7 +86,7 @@ import { NoSymbolIcon } from "@heroicons/vue/20/solid"
   @Prop(Boolean) readonly alwaysCopyIcon: boolean = false
   @Prop(Boolean) readonly disabled: boolean = false
   @Prop(String) readonly dtPresetLocale: string = ''
-  emitsParent = ['input', 'change', 'focus','update:modelValue', 'dateMaskChange', 'keypress.enter']
+  emitsParent = ['input', 'change', 'focus','blur','update:modelValue', 'dateMaskChange', 'keypress.enter', 'reset']
   componentsParent = {IMaskComponent, ClipboardDocumentListIcon, CheckBadgeIcon, NoSymbolIcon }
   declare $refs: {
     selectInput: typeof IMaskComponent
@@ -99,9 +95,7 @@ import { NoSymbolIcon } from "@heroicons/vue/20/solid"
   maskBlocks = {}
   utc: string = 'UTC'
 
-  // @Prop(Boolean) readonly autofocus: boolean = false
   @Prop(String) readonly placeholder: string = 'Введите текст'
-  // @Prop(Array) readonly items: { key: string | number, value: string, selected?: string }[]|null = null
 
   onAccept(value: string) {
     // console.log('on onAccept', value)
@@ -246,23 +240,14 @@ import { NoSymbolIcon } from "@heroicons/vue/20/solid"
 
   mountedParent() {
     this.$refs.selectInput.$el.addEventListener('focus', this._onFocus)
+    this.$refs.selectInput.$el.addEventListener('blur', this._onBlur)
     if (!this.isDateTime) {
       this.$refs.selectInput.$el.addEventListener('input', this._onInput)
     }
-    // console.log(this.$refs.selectInput.maxRef)
-    // console.log(this.$refs.selectInput.$el)
-    // useIMask(this.$refs.selectInput, {
-    //   value: '11',
-    //   // mask: {
-    //   //   mask: '{8}000000',
-    //   //   lazy: false
-    //   // },
-    //   radix: '.'
-    // })
-    // if extendable code here
   }
   beforeUnmountParent() {
     this.$refs.selectInput.$el.removeEventListener('focus', this._onFocus)
+    this.$refs.selectInput.$el.removeEventListener('blur', this._onBlur)
     if (!this.isDateTime) {
       this.$refs.selectInput.$el.removeEventListener('input', this._onInput)
     }
@@ -281,17 +266,24 @@ import { NoSymbolIcon } from "@heroicons/vue/20/solid"
     el?.blur?.()
   }
 
+  private _onReset() {
+    this.$emit('reset')
+    this._onInput('', true)
+  }
+
   private _onFocus() {
     this.$emit('focus')
   }
-  private _onInput(event: any) {
+  private _onBlur() {
+    this.nextTick(() => this.$emit('blur', this.$refs.selectInput.$el.value))
+  }
+  private _onInput(event: any, reset: boolean = false) {
     const val = event?.target?.value?.trim?.() || event
     if (typeof val != 'string') return
-    this.$emit('input',
-        this.value = val
-    )
-    this.$emit('change', this.value)
-    this.$emit('update:modelValue', this.value)}
+    this.$emit('input', this.value = val, reset)
+    this.$emit('change', this.value, reset)
+    this.$emit('update:modelValue', this.value)
+  }
 
   private _extractDateOnly(dateString:string): string|null {
     const regex = /([\d\w]{2,4}[./_-][\d\w]{2,4}[./_-][\d\w]{2,4})/
@@ -381,19 +373,13 @@ import { NoSymbolIcon } from "@heroicons/vue/20/solid"
   }
 
   private _isOnlyValueCopied = false
-  _copyValueToClipboard() {
+  private _copyValueToClipboard() {
     if (this.value) $VST.copyToClipboard(this.value)
     this._isOnlyValueCopied = true
     setTimeout(() => this._isOnlyValueCopied = false, 500)
   }
 
-  // Watch dynamic changes to items prop
-  // @Watch('value', true) _valueWatch(value: any) {
-  //   this.$emit('input', value)
-  //   this.$emit('change', value)
-  //   this.$emit('update:modelValue', value)
-  // }
-  /**  */
+  /** Является ли маска датой или датой со временем */
   declare isDateTime: boolean; @Computed('isDateTime') _valueComputed(): boolean {
     return ['date', 'datetime', 'datetimeSec'].includes(this.maskPreset ?? '')
   }
@@ -406,6 +392,4 @@ input
   @apply outline-stone-400 outline-1px focus:bg-white bg-white
   &::placeholder
     @apply fs-1rem text-#c1c7cf!
-//.vst-select-multi
-//  @apply min-w220px! min-h44px! flex! items-center justify-center rounded-3xl
 </style>
